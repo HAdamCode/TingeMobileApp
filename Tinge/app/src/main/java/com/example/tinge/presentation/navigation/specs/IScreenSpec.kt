@@ -104,23 +104,7 @@ sealed interface IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ){
-        TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
-            {
-                Row(
-                    //verticalAlignment = Alignment.CenterVertically,
-                    //horizontalArrangement = Arrangement.Center
-                ){
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            imageVector = Icons.Filled.KeyboardArrowRight,
-                            contentDescription = "Placeholder"
-                        )
-                    }
-                }
-            }
-        } else {
-            { }
-        }, title = { Text("Bottom Bar") },
+        TopAppBar(title = {  },
             actions = {
                 BottomAppBarActions(
                     tingeViewModel = tingeViewModel,

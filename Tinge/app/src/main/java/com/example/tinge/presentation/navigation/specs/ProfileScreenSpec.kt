@@ -1,11 +1,19 @@
 package com.example.tinge.presentation.navigation.specs
 
 import android.content.Context
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -49,29 +57,37 @@ object ProfileScreenSpec: IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        //Should have button to navigate to settings
-        IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
-            Icon(
-                //PLACEHOLDER ICON
-                imageVector = Icons.Filled.AddCircle,
-                contentDescription = "List Desc Placeholder!"
-            )
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+        ){
+            //Should have button to navigate to list
+            IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
+                Icon(
+                    //PLACEHOLDER ICON
+                    imageVector = Icons.Filled.Call,
+                    contentDescription = "List Desc Placeholder!"
+                )
+            }
+            //Should have button to navigate to chat
+            IconButton(onClick = { navController.navigate(route = ChatScreenSpec.route) }) {
+                Icon(
+                    //PLACEHOLDER ICON
+                    imageVector = Icons.Filled.AddCircle,
+                    contentDescription = "Chat Desc Placeholder!"
+                )
+            }
+            //Should have button to navigate to profile
+            IconButton(onClick = {  }) {
+                Icon(
+                    //PLACEHOLDER ICON
+                    imageVector = Icons.Filled.AccountBox,
+                    contentDescription = "Profile Desc Placeholder!"
+                )
+            }
         }
-        //Should have button to navigate to settings
-        IconButton(onClick = { navController.navigate(route = ChatScreenSpec.route) }) {
-            Icon(
-                //PLACEHOLDER ICON
-                imageVector = Icons.Filled.AddCircle,
-                contentDescription = "Chat Desc Placeholder!"
-            )
-        }
-        //Should have button to navigate to settings
-        IconButton(onClick = { navController.navigate(route = ProfileScreenSpec.route) }) {
-            Icon(
-                //PLACEHOLDER ICON
-                imageVector = Icons.Filled.AddCircle,
-                contentDescription = "Profile Desc Placeholder!"
-            )
-        }
+
     }
 }
