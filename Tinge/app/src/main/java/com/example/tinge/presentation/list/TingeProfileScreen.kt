@@ -21,39 +21,57 @@ import com.example.tinge.R
 import com.example.tinge.data.TingePerson
 import com.example.tinge.data.TingeRepo
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
+import kotlin.math.floor
 
 @Composable
 fun TingeProfileScreen(person: TingePerson) {
 
+    val feet = floor(person.height/12.0).toInt()
+    val inches = person.height%12
     Card() {
-        Row(
-            modifier = Modifier
-                .background(color = MaterialTheme.colorScheme.primaryContainer)
-                .fillMaxWidth()
-                .padding(top = 8.dp, bottom = 8.dp, start = 4.dp, end = 4.dp)
-        )
-        {
-            Image(
-                painter = painterResource(
-                    id =
-                    person.imageId
-                ),
-                contentDescription = ""
-            )
-            Column(modifier = Modifier.padding(4.dp))
-            {
+        Column(Modifier.padding(start = 4.dp, end = 4.dp)) {
                 Text(
                     text = person.name,
-                    fontSize = 28.sp,
+                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.primary
+                )
+                Row() {
+                    Text(
+                        text = "Age: ${person.age}",
+                        fontSize = 4.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = " Height: $feet' $inches\"",
+                        fontSize = 4.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = " Gender: ${person.gender}",
+                        fontSize = 4.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                Image(
+                    painter = painterResource(
+                        id =
+                        person.imageId
+                    ),
+                    contentDescription = ""
                 )
             }
         }
-    }
+
 }
 
 @Preview
 @Composable
 fun PreviewTingeProfileScreen() {
+    TingeProfileScreen(person = TingeRepo.getInstance(LocalContext.current).persons.first())
+}
+
+@Preview
+@Composable
+fun PreviewTingeProfileScreen2() {
     TingeProfileScreen(person = TingeRepo.getInstance(LocalContext.current).persons.first())
 }

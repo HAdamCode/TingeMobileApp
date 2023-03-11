@@ -35,11 +35,17 @@ class TingeRepo private constructor(
         val personsList = listOf(
             TingePerson(
                 imageId = R.drawable.cute_blue_monsters_university_icon,
-                name = "Sandler"
+                name = "Sandler",
+                age = 20,
+                height = 72,
+                gender = "Male"
             ),
             TingePerson(
                 imageId = R.drawable.monsters_university_character_randy_boggs_icon,
-                name = "Randy"
+                name = "Randy",
+                age = 23,
+                height = 63,
+                gender = "Non-binary"
             )
         )
         persons = personsList
