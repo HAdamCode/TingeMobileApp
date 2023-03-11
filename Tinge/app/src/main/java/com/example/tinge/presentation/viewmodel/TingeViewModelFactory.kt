@@ -10,7 +10,7 @@ class TingeViewModelFactory(context: Context): ViewModelProvider.NewInstanceFact
     companion object {
         private const val LOG_TAG = "448.TingeViewModelFactory"
     }
-
+    val currentContext = context
     fun getViewModelClass() = TingeViewModel::class.java
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -18,8 +18,8 @@ class TingeViewModelFactory(context: Context): ViewModelProvider.NewInstanceFact
         if(modelClass.isAssignableFrom(getViewModelClass())) {
             Log.d(LOG_TAG, "creating ViewModel: ${getViewModelClass()}")
             return modelClass
-                .getConstructor(TingeViewModel::class.java)
-                .newInstance(TingeRepo)
+                .getConstructor(TingeRepo::class.java)
+                .newInstance(TingeRepo.getInstance(context = currentContext))
         }
         Log.e(LOG_TAG, "Unknown ViewModel: $modelClass")
         throw IllegalArgumentException("Unknown ViewModel")

@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
+import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import com.example.tinge.presentation.viewmodel.TingeViewModel
 import com.example.tinge.presentation.viewmodel.TingeViewModelFactory
 import com.example.tinge.ui.theme.TingeTheme
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
         private const val LOG_TAG = "448.MainActivity"
     }
 
-    private lateinit var mTingeViewModel: TingeViewModel
+    private lateinit var mTingeViewModel: ITingeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
