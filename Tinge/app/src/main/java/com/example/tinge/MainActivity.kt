@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
+import com.example.tinge.presentation.list.TingeProfileScreen
 import com.example.tinge.presentation.navigation.TingeBottomBar
 import com.example.tinge.presentation.navigation.TingeNavHost
 import com.example.tinge.presentation.navigation.TingeTopBar
