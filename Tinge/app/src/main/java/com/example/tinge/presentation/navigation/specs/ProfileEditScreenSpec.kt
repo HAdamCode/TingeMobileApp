@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -61,7 +58,13 @@ object ProfileEditScreenSpec: IScreenSpec {
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            //Should have button to navigate to list
+            IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
+                Icon(
+                    //PLACEHOLDER ICON
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = "Save update"
+                )
+            }
         }
     }
 }
