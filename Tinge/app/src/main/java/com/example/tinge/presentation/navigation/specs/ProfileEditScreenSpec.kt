@@ -1,6 +1,7 @@
 package com.example.tinge.presentation.navigation.specs
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,7 +59,7 @@ object ProfileEditScreenSpec: IScreenSpec {
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
+            IconButton(onClick = { navController.navigate(route = ListScreenSpec.route); SaveToast(context) }) {
                 Icon(
                     //PLACEHOLDER ICON
                     imageVector = Icons.Filled.Check,
@@ -67,4 +68,9 @@ object ProfileEditScreenSpec: IScreenSpec {
             }
         }
     }
+}
+
+
+fun SaveToast(context: Context) {
+    Toast.makeText(context, "Update pressed", Toast.LENGTH_SHORT).show()
 }
