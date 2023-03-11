@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import android.content.Context
 import com.example.tinge.data.TingeRepo
 
-class TingeViewModelFactory: ViewModelProvider.NewInstanceFactory() {
+class TingeViewModelFactory(context: Context): ViewModelProvider.NewInstanceFactory() {
     companion object {
         private const val LOG_TAG = "448.TingeViewModelFactory"
     }
