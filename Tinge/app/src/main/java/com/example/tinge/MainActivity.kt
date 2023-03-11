@@ -16,6 +16,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
+import com.example.tinge.presentation.navigation.TingeBottomBar
+import com.example.tinge.presentation.navigation.TingeNavHost
+import com.example.tinge.presentation.navigation.TingeTopBar
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import com.example.tinge.presentation.viewmodel.TingeViewModel
 import com.example.tinge.presentation.viewmodel.TingeViewModelFactory
@@ -36,13 +39,13 @@ class MainActivity : ComponentActivity() {
         mTingeViewModel = ViewModelProvider(this, factory)[factory.getViewModelClass()]
 
         setContent {
-            //MainActivityContent(samodelkinViewModel = mSamodelkinViewModel as SamodelkinViewModel)
+            MainActivityContent(tingeViewModel = mTingeViewModel)
         }
     }
 }
 
 @Composable
-private fun MainActivityContent(tingeViewModel: TingeViewModel) {
+private fun MainActivityContent(tingeViewModel: ITingeViewModel) {
     val navController = rememberNavController()
     val context = LocalContext.current
 
@@ -52,7 +55,16 @@ private fun MainActivityContent(tingeViewModel: TingeViewModel) {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-
+            Scaffold(
+                topBar = {
+                    TingeTopBar(tingeViewModel, navController, context)
+                },
+                bottomBar = {
+                    TingeBottomBar(tingeViewModel, navController, context)
+                }
+            ) {
+                TingeNavHost(Modifier.padding(it), navController = navController, context = context)
+            }
         }
     }
 }

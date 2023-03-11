@@ -8,9 +8,9 @@ interface ITingeViewModel {
     val personListState: StateFlow<List<TingePerson>>
     val currentPersonState: StateFlow<TingePerson?>
 
-    fun addPerson(characterToAdd: TingePerson)
+    fun addPerson(personToAdd: TingePerson)
 
-    fun likePerson(characterToLike: TingePerson)
+    fun likePerson(personToLike: TingePerson)
 
-    fun dislikePerson(characterToDislike: TingePerson)
+    fun dislikePerson(personToDislike: TingePerson)
 }
