@@ -19,7 +19,7 @@ import com.example.tinge.data.TingeRepo
 import kotlin.math.floor
 
 @Composable
-fun TingeProfileScreen(person: TingePerson) {
+fun TingeListScreen(person: TingePerson) {
 
     val feet = floor(person.height/12.0).toInt()
     val inches = person.height%12
@@ -62,11 +62,11 @@ fun TingeProfileScreen(person: TingePerson) {
 @Preview
 @Composable
 fun PreviewTingeProfileScreen() {
-    TingeProfileScreen(person = TingeRepo.getInstance(LocalContext.current).persons.first())
+    TingeListScreen(person = TingeRepo.getInstance(LocalContext.current).persons.first())
 }
 
 @Preview
 @Composable
 fun PreviewTingeProfileScreen2() {
-    TingeProfileScreen(person = TingeRepo.getInstance(LocalContext.current).persons.last())
+    TingeListScreen(person = TingeRepo.getInstance(LocalContext.current).persons.last())
 }

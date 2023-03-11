@@ -20,7 +20,10 @@ object ChatScreenSpec: IScreenSpec {
     override fun buildRoute(vararg args: String?) = route
 
     @Composable
-    override fun Content() {
+    override fun Content(tingeViewModel: ITingeViewModel,
+                         navController: NavHostController,
+                         navBackStackEntry: NavBackStackEntry,
+                         context: Context) {
 
     }
 

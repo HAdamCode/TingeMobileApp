@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.rememberNavController
-import com.example.tinge.presentation.list.TingeProfileScreen
+import com.example.tinge.presentation.list.TingeListScreen
 import com.example.tinge.presentation.navigation.TingeBottomBar
 import com.example.tinge.presentation.navigation.TingeNavHost
 import com.example.tinge.presentation.navigation.TingeTopBar
@@ -64,7 +64,7 @@ private fun MainActivityContent(tingeViewModel: ITingeViewModel) {
                     TingeBottomBar(tingeViewModel, navController, context)
                 }
             ) {
-                TingeNavHost(Modifier.padding(it), navController = navController, context = context)
+                TingeNavHost(Modifier.padding(it), navController = navController, context = context, tingeViewModel = tingeViewModel)
             }
         }
     }

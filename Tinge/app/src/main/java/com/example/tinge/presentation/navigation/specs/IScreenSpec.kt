@@ -140,6 +140,9 @@ sealed interface IScreenSpec {
     )
 
     @Composable
-    fun Content()
+    fun Content(tingeViewModel: ITingeViewModel,
+                navController: NavHostController,
+                navBackStackEntry: NavBackStackEntry,
+                context: Context)
 
 }

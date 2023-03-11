@@ -6,9 +6,11 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.example.tinge.presentation.list.TingeListScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
 object ListScreenSpec : IScreenSpec{
@@ -18,8 +20,14 @@ object ListScreenSpec : IScreenSpec{
     override fun buildRoute(vararg args: String?) = route
 
     @Composable
-    override fun Content() {
-
+    override fun Content(
+        tingeViewModel: ITingeViewModel,
+        navController: NavHostController,
+        navBackStackEntry: NavBackStackEntry,
+        context: Context
+    ) {
+        val person = tingeViewModel.currentPersonState.collectAsState()
+        person.value?.let { TingeListScreen(it) }
     }
 
     @Composable
