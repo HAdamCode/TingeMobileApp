@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.example.tinge.presentation.settings.TingeSettingsScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
 object SettingsScreenSpec: IScreenSpec {
@@ -22,7 +23,7 @@ object SettingsScreenSpec: IScreenSpec {
                          navController: NavHostController,
                          navBackStackEntry: NavBackStackEntry,
                          context: Context) {
-
+        TingeSettingsScreen()
     }
 
     @Composable
