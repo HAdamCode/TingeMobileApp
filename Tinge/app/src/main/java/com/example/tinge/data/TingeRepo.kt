@@ -11,15 +11,37 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.util.*
 
-object TingeRepo {
-    public val persons = listOf(
-        TingePerson(
-            imageId = R.drawable.cute_blue_monsters_university_icon,
-            name = "Sandler"
-        ),
-        TingePerson(
-            imageId = R.drawable.monsters_university_character_randy_boggs_icon,
-            name = "Randy"
+class TingeRepo private constructor(
+    context: Context?
+) {
+    companion object {
+        private const val LOG_TAG = "Tinge.TingeRepo"
+        private var INSTANCE: TingeRepo? = null
+
+        fun getInstance (context: Context? = null): TingeRepo {
+            var instance = INSTANCE
+            if (instance == null) {
+                instance = TingeRepo(context)
+                INSTANCE = instance
+            }
+            return instance
+        }
+    }
+
+    val persons: List<TingePerson>
+
+    init {
+        Log.d(LOG_TAG,"Initializing Repo List")
+        val personsList = listOf(
+            TingePerson(
+                imageId = R.drawable.cute_blue_monsters_university_icon,
+                name = "Sandler"
+            ),
+            TingePerson(
+                imageId = R.drawable.monsters_university_character_randy_boggs_icon,
+                name = "Randy"
+            )
         )
-    )
+        persons = personsList
+    }
 }
