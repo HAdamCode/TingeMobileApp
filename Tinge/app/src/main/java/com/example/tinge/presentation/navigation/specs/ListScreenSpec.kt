@@ -46,6 +46,29 @@ object ListScreenSpec : IScreenSpec{
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        TODO("Not yet implemented")
+        //Should have button to navigate to settings
+        IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
+            Icon(
+                //PLACEHOLDER ICON
+                imageVector = Icons.Filled.AddCircle,
+                contentDescription = "List Desc Placeholder!"
+            )
+        }
+        //Should have button to navigate to settings
+        IconButton(onClick = { navController.navigate(route = ChatScreenSpec.route) }) {
+            Icon(
+                //PLACEHOLDER ICON
+                imageVector = Icons.Filled.AddCircle,
+                contentDescription = "Chat Desc Placeholder!"
+            )
+        }
+        //Should have button to navigate to settings
+        IconButton(onClick = { navController.navigate(route = ProfileScreenSpec.route) }) {
+            Icon(
+                //PLACEHOLDER ICON
+                imageVector = Icons.Filled.AddCircle,
+                contentDescription = "Profile Desc Placeholder!"
+            )
+        }
     }
 }

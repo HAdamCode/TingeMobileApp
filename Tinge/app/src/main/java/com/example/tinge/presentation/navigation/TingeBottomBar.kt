@@ -14,7 +14,7 @@ fun TingeBottomBar(
     context: Context
 ){
     val navBackStackEntryState = navController.currentBackStackEntryAsState()
-    IScreenSpec.TopBar(
+    IScreenSpec.BottomBar(
         tingeViewModel = tingeViewModel,
         navController =navController ,
         navBackStackEntry = navBackStackEntryState.value,

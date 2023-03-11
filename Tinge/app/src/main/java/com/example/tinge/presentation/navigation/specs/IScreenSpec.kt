@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -103,7 +104,31 @@ sealed interface IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ){
-
+        TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
+            {
+                Row(
+                    //verticalAlignment = Alignment.CenterVertically,
+                    //horizontalArrangement = Arrangement.Center
+                ){
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowRight,
+                            contentDescription = "Placeholder"
+                        )
+                    }
+                }
+            }
+        } else {
+            { }
+        }, title = { Text("Bottom Bar") },
+            actions = {
+                BottomAppBarActions(
+                    tingeViewModel = tingeViewModel,
+                    navController = navController,
+                    navBackStackEntry = navBackStackEntry,
+                    context = context
+                )
+            })
     }
 
     @Composable
