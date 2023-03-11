@@ -63,6 +63,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
     override fun addPerson(personToAdd: TingePerson) {
         Log.d(LOG_TAG, "adding character $personToAdd")
         mPersonListState.value += personToAdd
+        mCurrentPersonState.value = personToAdd
     }
 
     /**

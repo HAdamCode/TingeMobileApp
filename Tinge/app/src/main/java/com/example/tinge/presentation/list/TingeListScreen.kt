@@ -1,9 +1,7 @@
 package com.example.tinge.presentation.list
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,27 +21,27 @@ fun TingeListScreen(person: TingePerson) {
 
     val feet = floor(person.height/12.0).toInt()
     val inches = person.height%12
-    Card() {
+    Card(Modifier.fillMaxHeight().fillMaxWidth()) {
         Column(Modifier.padding(start = 4.dp, end = 4.dp)) {
                 Text(
                     text = person.name,
-                    fontSize = 14.sp,
+                    fontSize = 34.sp,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Row() {
                     Text(
                         text = "Age: ${person.age}",
-                        fontSize = 4.sp,
+                        fontSize = 18.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
                         text = " Height: $feet' $inches\"",
-                        fontSize = 4.sp,
+                        fontSize = 18.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
                         text = " Gender: ${person.gender}",
-                        fontSize = 4.sp,
+                        fontSize = 18.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -52,7 +50,8 @@ fun TingeListScreen(person: TingePerson) {
                         id =
                         person.imageId
                     ),
-                    contentDescription = ""
+                    contentDescription = "",
+                    Modifier.fillMaxWidth().size(350.dp).fillMaxHeight()
                 )
             }
         }
