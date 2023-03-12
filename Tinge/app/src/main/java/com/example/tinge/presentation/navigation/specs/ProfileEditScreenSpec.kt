@@ -68,9 +68,7 @@ object ProfileEditScreenSpec: IScreenSpec {
             }
         }
     }
-}
-
-
-fun SaveToast(context: Context) {
-    Toast.makeText(context, "Update pressed", Toast.LENGTH_SHORT).show()
+    fun SaveToast(context: Context) {
+        Toast.makeText(context, "Update pressed", Toast.LENGTH_SHORT).show()
+    }
 }
