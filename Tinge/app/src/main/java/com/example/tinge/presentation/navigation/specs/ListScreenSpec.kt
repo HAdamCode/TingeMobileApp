@@ -78,7 +78,7 @@ object ListScreenSpec : IScreenSpec{
                 )
             }
             //Should have button to navigate to settings
-            IconButton(onClick = { navController.navigate(route = ChatScreenSpec.route) }) {
+            IconButton(onClick = { navController.navigate(route = ChatListScreenSpec.route) }) {
                 Icon(
                     //PLACEHOLDER ICON
                     imageVector = Icons.Filled.AddCircle,

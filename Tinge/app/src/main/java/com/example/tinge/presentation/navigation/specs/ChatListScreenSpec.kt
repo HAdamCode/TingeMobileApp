@@ -5,23 +5,23 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
-import com.example.tinge.presentation.list.TingeListScreen
-import com.example.tinge.presentation.profile.TingeProfileScreen
+import com.example.tinge.presentation.chat.TingeChatListScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
-object ProfileScreenSpec: IScreenSpec {
-    private const val LOG_TAG = "Tinge.ProfileScreenSpec"
-    override val route = "profile"
+object ChatListScreenSpec: IScreenSpec {
+    private const val LOG_TAG = "Tinge.ChatListScreenSpec"
+    override val route = "chatList"
     override val arguments: List<NamedNavArgument> = emptyList()
     override fun buildRoute(vararg args: String?) = route
 
@@ -30,9 +30,7 @@ object ProfileScreenSpec: IScreenSpec {
                          navController: NavHostController,
                          navBackStackEntry: NavBackStackEntry,
                          context: Context) {
-        val person = tingeViewModel.currentPersonState.collectAsState()
-        person.value?.let { TingeProfileScreen(it) }
-
+        TingeChatListScreen(tingeViewModel, navController)
     }
 
     @Composable
@@ -42,13 +40,6 @@ object ProfileScreenSpec: IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ){
-        IconButton(onClick = { navController.navigate(route = ProfileEditScreenSpec.route) }) {
-            Icon(
-                //PLACEHOLDER ICON
-                imageVector = Icons.Filled.Edit,
-                contentDescription = "Edit Personal Profile"
-            )
-        }
         //Should have button to navigate to settings
         IconButton(onClick = { navController.navigate(route = SettingsScreenSpec.route) }) {
             Icon(
@@ -72,7 +63,7 @@ object ProfileScreenSpec: IScreenSpec {
             modifier = Modifier
                 .fillMaxWidth()
         ){
-            //Should have button to navigate to list
+            //Should have button to navigate to settings
             IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
                 Icon(
                     //PLACEHOLDER ICON
@@ -80,16 +71,16 @@ object ProfileScreenSpec: IScreenSpec {
                     contentDescription = "List Desc Placeholder!"
                 )
             }
-            //Should have button to navigate to chat
-            IconButton(onClick = { navController.navigate(route = ChatListScreenSpec.route) }) {
+            //Should have button to navigate to settings
+            IconButton(onClick = { }) {
                 Icon(
                     //PLACEHOLDER ICON
                     imageVector = Icons.Filled.AddCircle,
                     contentDescription = "Chat Desc Placeholder!"
                 )
             }
-            //Should have button to navigate to profile
-            IconButton(onClick = {  }) {
+            //Should have button to navigate to settings
+            IconButton(onClick = { navController.navigate(route = ProfileScreenSpec.route) }) {
                 Icon(
                     //PLACEHOLDER ICON
                     imageVector = Icons.Filled.AccountBox,
