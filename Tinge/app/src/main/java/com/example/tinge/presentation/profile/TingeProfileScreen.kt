@@ -33,12 +33,12 @@ fun TingeProfileScreen(person: TingePerson) {
             )
             Row() {
                 Text(
-                    text = "Age: ${person.age}",
+                    text = " Age: ${person.age}  | ",
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = " Height: $feet' $inches\"",
+                    text = " Height: $feet' $inches\"  | ",
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.primary
                 )
