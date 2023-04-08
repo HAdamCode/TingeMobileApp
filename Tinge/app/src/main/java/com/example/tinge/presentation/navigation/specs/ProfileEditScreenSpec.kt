@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -44,6 +43,41 @@ object ProfileEditScreenSpec: IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ){
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun TopAppBarContent(
+        tingeViewModel: ITingeViewModel,
+        navController: NavHostController,
+        navBackStackEntry: NavBackStackEntry?,
+        context: Context
+    ){
+        TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
+            {
+                Row(
+                    //verticalAlignment = Alignment.CenterVertically,
+                    //horizontalArrangement = Arrangement.Center
+                ){
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Placeholder"
+                        )
+                    }
+                }
+            }
+        } else {
+            { }
+        }, title = { Text("Edit Your Profile") },
+            actions = {
+                ProfileEditScreenSpec.TopAppBarActions(
+                    tingeViewModel = tingeViewModel,
+                    navController = navController,
+                    navBackStackEntry = navBackStackEntry,
+                    context = context
+                )
+            })
     }
 
     @Composable

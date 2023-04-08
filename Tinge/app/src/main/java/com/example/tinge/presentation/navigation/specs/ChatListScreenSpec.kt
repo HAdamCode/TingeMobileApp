@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,6 +48,45 @@ object ChatListScreenSpec: IScreenSpec {
                 contentDescription = "Settings Desc Placeholder!"
             )
         }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun TopAppBarContent(
+        tingeViewModel: ITingeViewModel,
+        navController: NavHostController,
+        navBackStackEntry: NavBackStackEntry?,
+        context: Context
+    ){
+        /*
+navigationIcon = if (navController.previousBackStackEntry != null) {
+            {
+                Row(
+                    //verticalAlignment = Alignment.CenterVertically,
+                    //horizontalArrangement = Arrangement.Center
+                ){
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Placeholder"
+                        )
+                    }
+                }
+            }
+        } else {
+            { }
+        },
+
+         */
+        TopAppBar(title = { Text("Chats") },
+            actions = {
+                TopAppBarActions(
+                    tingeViewModel = tingeViewModel,
+                    navController = navController,
+                    navBackStackEntry = navBackStackEntry,
+                    context = context
+                )
+            })
     }
 
     @Composable

@@ -55,7 +55,7 @@ sealed interface IScreenSpec {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun TopAppBarContent(
+    fun TopAppBarContent(
         tingeViewModel: ITingeViewModel,
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
