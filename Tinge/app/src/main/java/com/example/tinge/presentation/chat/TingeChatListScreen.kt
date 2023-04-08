@@ -10,8 +10,10 @@ import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.tinge.presentation.navigation.specs.ChatScreenSpec
 //import com.example.tinge.presentation.navigation.specs.ChatScreenSpec
@@ -23,7 +25,7 @@ fun TingeChatListScreen(tingeViewModel: ITingeViewModel, navController: NavHostC
     val person = tingeViewModel.currentPersonState.collectAsState().value
     if (person != null) {
         Card(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(12.dp),
             onClick = { navController.navigate(route = ChatScreenSpec.route) }) {
             Row() {
                 Image(
@@ -32,11 +34,13 @@ fun TingeChatListScreen(tingeViewModel: ITingeViewModel, navController: NavHostC
                     ),
                     contentDescription = "",
                     Modifier
-                        .size(50.dp)
+                        .size(90.dp)
                 )
                 Text(text = person.name, modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 14.dp))
+                    .padding(top = 28.dp, start = 22.dp),
+                style = TextStyle(fontSize = 25.sp)
+                )
             }
         }
     }
