@@ -2,6 +2,7 @@ package com.example.tinge
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.AuthUI.IdpConfig
 import com.firebase.ui.auth.AuthUI.IdpConfig.EmailBuilder
@@ -12,6 +13,10 @@ import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 
 abstract class FirebaseUIActivity : AppCompatActivity() {
+    companion object {
+        private const val LOG_TAG = "Tinge.FirebaseUIActivity"
+    }
+
     // [START auth_fui_create_launcher]
     // See: https://developer.android.com/training/basics/intents/result
     private val signInLauncher = registerForActivityResult(
@@ -22,6 +27,7 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
     // [END auth_fui_create_launcher]
 
     private fun createSignInIntent() {
+        Log.d(LOG_TAG,"Creating providers and sign in intent")
         // [START auth_fui_create_intent]
         // Choose authentication providers
         val providers = arrayListOf(

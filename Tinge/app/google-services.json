@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "989603582678",
+    "project_id": "tinge-20fff",
+    "storage_bucket": "tinge-20fff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:989603582678:android:9bd263a2698712e745af77",
+        "android_client_info": {
+          "package_name": "com.example.tinge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "989603582678-30ef816kn4sqv01g0dqkif6p9684tfdj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTCQtSehdSG6jrV_QVQ7bw1YmXG5_mkLQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "989603582678-30ef816kn4sqv01g0dqkif6p9684tfdj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
