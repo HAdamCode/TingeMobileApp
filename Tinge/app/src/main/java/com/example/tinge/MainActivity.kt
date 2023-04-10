@@ -69,8 +69,8 @@ class MainActivity : AppCompatActivity() {
             onSignInResult(res)
         }
         setContent {
-            //MainActivityContent(tingeViewModel = mTingeViewModel)
             createSignInIntent(signInLauncher)
+            MainActivityContent(tingeViewModel = mTingeViewModel)
         }
     }
 }
