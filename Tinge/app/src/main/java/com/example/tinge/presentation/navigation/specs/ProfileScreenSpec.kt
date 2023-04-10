@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.example.tinge.R
 import com.example.tinge.presentation.list.TingeListScreen
 import com.example.tinge.presentation.profile.TingeProfileScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
@@ -114,7 +116,8 @@ object ProfileScreenSpec: IScreenSpec {
             IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
                 Icon(
                     //PLACEHOLDER ICON
-                    imageVector = Icons.Filled.Call,
+                    //imageVector = Icons.Filled.Call,
+                    painter = painterResource(R.drawable.explore),
                     contentDescription = "List Desc Placeholder!"
                 )
             }
@@ -122,7 +125,8 @@ object ProfileScreenSpec: IScreenSpec {
             IconButton(onClick = { navController.navigate(route = ChatListScreenSpec.route) }) {
                 Icon(
                     //PLACEHOLDER ICON
-                    imageVector = Icons.Filled.AddCircle,
+                    //imageVector = Icons.Filled.AddCircle,
+                    painter = painterResource(R.drawable.chaticon),
                     contentDescription = "Chat Desc Placeholder!"
                 )
             }
@@ -130,7 +134,8 @@ object ProfileScreenSpec: IScreenSpec {
             IconButton(onClick = {  }) {
                 Icon(
                     //PLACEHOLDER ICON
-                    imageVector = Icons.Filled.AccountBox,
+                    //imageVector = Icons.Filled.AccountBox,
+                    painter = painterResource(R.drawable.profile),
                     contentDescription = "Profile Desc Placeholder!"
                 )
             }

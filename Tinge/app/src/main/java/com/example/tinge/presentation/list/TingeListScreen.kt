@@ -73,14 +73,16 @@ fun TingeListScreen(person: TingePerson) {
                 IconButton(onClick = { dislikeToast(context) }) {
                     Icon(
                         //PLACEHOLDER ICON
-                        imageVector = Icons.Filled.Delete,
+                        //imageVector = Icons.Filled.Delete,
+                        painter = painterResource(com.example.tinge.R.drawable.dislikebutton),
                         contentDescription = "List Desc Placeholder!"
                     )
                 }
                 IconButton(onClick = { likeToast(context) }) {
                     Icon(
                         //PLACEHOLDER ICON
-                        imageVector = Icons.Filled.CheckCircle,
+                        //imageVector = Icons.Filled.CheckCircle,
+                        painter = painterResource(com.example.tinge.R.drawable.likebutton),
                         contentDescription = "List Desc Placeholder!"
                     )
                 }
