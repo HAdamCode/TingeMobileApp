@@ -25,7 +25,7 @@
         <activity
             android:name=".FirebaseUIActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light">>
+            android:theme="@style/Theme.AppCompat.Light">
         </activity>
     </application>
 
