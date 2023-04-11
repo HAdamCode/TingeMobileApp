@@ -94,7 +94,7 @@ object ListScreenSpec : IScreenSpec{
          */
         TopAppBar(title = { Text("Tinge") },
             actions = {
-                ListScreenSpec.TopAppBarActions(
+                TopAppBarActions(
                     tingeViewModel = tingeViewModel,
                     navController = navController,
                     navBackStackEntry = navBackStackEntry,
