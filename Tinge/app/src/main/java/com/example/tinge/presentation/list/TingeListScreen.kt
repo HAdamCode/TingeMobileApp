@@ -1,6 +1,7 @@
 package com.example.tinge.presentation.list
 
 import android.content.Context
+import android.graphics.Paint.Align
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -31,7 +32,10 @@ fun TingeListScreen(person: TingePerson) {
         Modifier
             .fillMaxHeight()
             .fillMaxWidth()) {
-        Column(Modifier.padding(start = 4.dp, end = 4.dp)) {
+        Column(
+            Modifier
+                .padding(start = 4.dp, end = 4.dp)
+                .weight(1f)) {
                 Text(
                     text = person.name,
                     fontSize = 34.sp,
@@ -65,29 +69,36 @@ fun TingeListScreen(person: TingePerson) {
                         .size(350.dp)
                         .fillMaxHeight()
                 )
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()) {
-                IconButton(onClick = { dislikeToast(context) }) {
-                    Icon(
-                        //PLACEHOLDER ICON
-                        //imageVector = Icons.Filled.Delete,
-                        painter = painterResource(com.example.tinge.R.drawable.dislikebutton),
-                        contentDescription = "List Desc Placeholder!"
-                    )
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()) {
+                    Column(modifier = Modifier.fillMaxWidth().weight(1f),horizontalAlignment = Alignment.CenterHorizontally) {
+                        IconButton(onClick = { dislikeToast(context) }) {
+                            Icon(
+                                //PLACEHOLDER ICON
+                                //imageVector = Icons.Filled.Delete,
+                                painter = painterResource(com.example.tinge.R.drawable.dislikebutton),
+                                contentDescription = "List Desc Placeholder!"
+                            )
+                        }
+                    }
+                    Column(modifier = Modifier.fillMaxWidth().weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                        IconButton(onClick = { likeToast(context) }) {
+                            Icon(
+                                //PLACEHOLDER ICON
+                                //imageVector = Icons.Filled.CheckCircle,
+                                painter = painterResource(com.example.tinge.R.drawable.likebutton),
+                                contentDescription = "List Desc Placeholder!"
+                            )
+                        }
+                    }
                 }
-                IconButton(onClick = { likeToast(context) }) {
-                    Icon(
-                        //PLACEHOLDER ICON
-                        //imageVector = Icons.Filled.CheckCircle,
-                        painter = painterResource(com.example.tinge.R.drawable.likebutton),
-                        contentDescription = "List Desc Placeholder!"
-                    )
-                }
-
             }
+
             }
         }
 

@@ -44,6 +44,8 @@ import com.google.firebase.auth.ktx.actionCodeSettings
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 
 //class MainActivity : ComponentActivity() {
 class MainActivity : AppCompatActivity() {
@@ -53,6 +55,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mTingeViewModel: ITingeViewModel
     private lateinit var auth: FirebaseAuth
+    lateinit var storage: FirebaseStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,13 +64,14 @@ class MainActivity : AppCompatActivity() {
         val factory = TingeViewModelFactory(this)
         mTingeViewModel = ViewModelProvider(this, factory)[factory.getViewModelClass()]
 
-        //startActivity(Intent(this, FirebaseUIActivity::class.java))
-        //checkCurrentUser()
         val signInLauncher = registerForActivityResult(
             FirebaseAuthUIActivityResultContract()
         ) { res ->
             onSignInResult(res)
         }
+
+        storage = Firebase.storage
+
         setContent {
             createSignInIntent(signInLauncher)
             MainActivityContent(tingeViewModel = mTingeViewModel)
@@ -152,3 +156,5 @@ private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult): Firebase
     }
 }
 // [END auth_fui_result]
+
+
