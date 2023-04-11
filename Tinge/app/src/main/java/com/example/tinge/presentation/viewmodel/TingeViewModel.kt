@@ -15,16 +15,14 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         private const val LOG_TAG = "448.TingeViewModel"
     }
 
-    private val mPersons: MutableList<TingePerson> =
-        mutableListOf()
+    private val mPersons: MutableStateFlow<List<TingePerson>> =
+        MutableStateFlow(emptyList())
 
-    /**
-     * holds list of all characters stored within the view model
-     */
-    private val mPersonListState = MutableStateFlow(mPersons.toList())
+
+//    private val mPersonListState = MutableStateFlow(mPersons.toList())
 
     override val personListState: StateFlow<List<TingePerson>>
-        get() = mPersonListState.asStateFlow()
+        get() = mPersons.asStateFlow()
 
     private val mCurrentPersonState: MutableStateFlow<TingePerson?> =
         MutableStateFlow(null)
@@ -32,10 +30,24 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
     override val currentPersonState: StateFlow<TingePerson?>
         get() = mCurrentPersonState
 
+    private val mCurrentPersonIdState: MutableStateFlow<UUID> =
+        MutableStateFlow(UUID.randomUUID())
+
     init {
         Log.d(LOG_TAG, "Characters do be adding")
         addPerson(tingeRepo.persons.first())
         addPerson(tingeRepo.persons.last())
+
+        viewModelScope.launch {
+            tingeRepo.getPersons().collect { personList ->
+                mPersons.update { personList }
+            }
+        }
+        viewModelScope.launch {
+            mCurrentPersonIdState
+                .map { uuid -> tingeRepo.getPerson(uuid) }
+                .collect { person -> mCurrentPersonState.update { person } }
+        }
     }
 
     /**
@@ -43,19 +55,11 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
      * in list of characters, then sets currentCharacterState to null.
      * @param uuid id to use for character lookup
      */
-//    override fun loadPersonByUUID(uuid: UUID) {
-//        Log.d(LOG_TAG, "loadCharacterByUUID($uuid)")
-//        mCurrentCharacterState.value = null
-//        mCharacters.forEach { character ->
-//            if (character.id == uuid) {
-//                Log.d(LOG_TAG, "Character found! $character")
-//                mCurrentCharacterState.value = character
-//                return
-//            }
-//        }
-//        Log.d(LOG_TAG, "Character not found")
-//        return
-//    }
+    override fun loadPersonByUUID(uuid: UUID) {
+        Log.d(LOG_TAG, "loadCharacterByUUID($uuid)")
+        mCurrentPersonIdState.update { uuid }
+        return
+    }
 
     /**
      * Adds the given character to the list of characters.
@@ -63,8 +67,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
      */
     override fun addPerson(personToAdd: TingePerson) {
         Log.d(LOG_TAG, "adding character $personToAdd")
-        mPersonListState.value += personToAdd
-        mCurrentPersonState.value = personToAdd
+        tingeRepo.addPerson(personToAdd)
     }
 
     /**
@@ -87,11 +90,11 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 //        Log.d(LOG_TAG, "Character not found")
 //    }
 
-    override fun likePerson(characterToLike: TingePerson) {
+    override fun likePerson(personToLike: TingePerson) {
         TODO("Not yet implemented")
     }
 
-    override fun dislikePerson(characterToDislike: TingePerson) {
+    override fun dislikePerson(personToDislike: TingePerson) {
         TODO("Not yet implemented")
     }
 

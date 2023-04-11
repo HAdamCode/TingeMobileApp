@@ -101,42 +101,5 @@ object ChatScreenSpec: IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-        ){
-            //Should have button to navigate to settings
-            IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
-                Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.Call,
-                    painter = painterResource(R.drawable.explore),
-                    contentDescription = "List Desc Placeholder!",
-                    tint = Color(255, 121, 0)
-                )
-            }
-            //Should have button to navigate to settings
-            IconButton(onClick = { }) {
-                Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.AddCircle,
-                    painter = painterResource(R.drawable.chaticon),
-                    contentDescription = "Chat Desc Placeholder!",
-                    tint = Color(25, 121, 100)
-                )
-            }
-            //Should have button to navigate to settings
-            IconButton(onClick = { navController.navigate(route = ProfileScreenSpec.route) }) {
-                Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.AccountBox,
-                    painter = painterResource(R.drawable.profile),
-                    contentDescription = "Profile Desc Placeholder!",
-                    tint = Color(55, 10, 100)
-                )
-            }
-        }
     }
 }

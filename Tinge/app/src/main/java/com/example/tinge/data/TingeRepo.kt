@@ -12,16 +12,18 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 class TingeRepo private constructor(
-    context: Context?
+    private val tingeDao: TingeDao,
+    private val coroutineScope: CoroutineScope = GlobalScope
 ) {
     companion object {
         private const val LOG_TAG = "Tinge.TingeRepo"
         private var INSTANCE: TingeRepo? = null
 
-        fun getInstance (context: Context? = null): TingeRepo {
+        fun getInstance (context: Context): TingeRepo {
             var instance = INSTANCE
             if (instance == null) {
-                instance = TingeRepo(context)
+                val database = TingeDatabase.getInstance(context)
+                instance = TingeRepo(database.tingeDao)
                 INSTANCE = instance
             }
             return instance
@@ -51,5 +53,18 @@ class TingeRepo private constructor(
             )
         )
         persons = personsList
+    }
+    fun getPersons(): Flow<List<TingePerson>> = tingeDao.getPersons()
+    suspend fun getPerson(id: UUID): TingePerson? = tingeDao.getPersonById(id)
+    fun addPerson(tingePerson: TingePerson) {
+        coroutineScope.launch {
+            tingeDao.addPerson(tingePerson)
+        }
+    }
+
+    fun deletePerson(tingePerson: TingePerson) {
+        coroutineScope.launch {
+            tingeDao.deletePerson(tingePerson)
+        }
     }
 }
