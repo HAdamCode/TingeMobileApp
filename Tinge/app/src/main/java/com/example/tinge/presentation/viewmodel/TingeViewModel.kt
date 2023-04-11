@@ -35,6 +35,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
     init {
         Log.d(LOG_TAG, "Characters do be adding")
         addPerson(tingeRepo.persons.first())
+        addPerson(tingeRepo.persons.last())
     }
 
     /**

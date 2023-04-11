@@ -22,25 +22,28 @@ import com.example.tinge.presentation.viewmodel.ITingeViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TingeChatListScreen(tingeViewModel: ITingeViewModel, navController: NavHostController) {
-    val person = tingeViewModel.currentPersonState.collectAsState().value
-    if (person != null) {
-        Card(
-            modifier = Modifier.padding(12.dp),
-            onClick = { navController.navigate(route = ChatScreenSpec.route) }) {
-            Row() {
-                Image(
-                    painter = painterResource(
-                        id = person.imageId
-                    ),
-                    contentDescription = "",
-                    Modifier
-                        .size(90.dp)
-                )
-                Text(text = person.firstName + ' ' + person.lastName, modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 28.dp, start = 22.dp),
-                style = TextStyle(fontSize = 25.sp)
-                )
+    val people = tingeViewModel.personListState.collectAsState().value
+    Column() {
+        people.forEach { person ->
+            Card(
+                modifier = Modifier.padding(12.dp),
+                onClick = { navController.navigate(route = ChatScreenSpec.route) }) {
+                Row() {
+                    Image(
+                        painter = painterResource(
+                            id = person.imageId
+                        ),
+                        contentDescription = "",
+                        Modifier
+                            .size(90.dp)
+                    )
+                    Text(
+                        text = person.firstName + ' ' + person.lastName, modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 28.dp, start = 22.dp),
+                        style = TextStyle(fontSize = 25.sp)
+                    )
+                }
             }
         }
     }

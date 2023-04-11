@@ -65,6 +65,8 @@ object ChatScreenSpec: IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ){
+        val name = tingeViewModel.currentPersonState.collectAsState().value?.firstName +
+                tingeViewModel.currentPersonState.collectAsState().value?.lastName
         TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
             {
                 Row(
@@ -81,7 +83,7 @@ object ChatScreenSpec: IScreenSpec {
             }
         } else {
             { }
-        }, title = { Text("Chat With: ") },
+        }, title = { Text("Chat With: $name") },
             actions = {
                 ChatScreenSpec.TopAppBarActions(
                     tingeViewModel = tingeViewModel,
