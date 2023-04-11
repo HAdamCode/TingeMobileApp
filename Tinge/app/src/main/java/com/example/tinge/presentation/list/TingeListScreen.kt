@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -82,7 +83,8 @@ fun TingeListScreen(person: TingePerson) {
                                 //PLACEHOLDER ICON
                                 //imageVector = Icons.Filled.Delete,
                                 painter = painterResource(com.example.tinge.R.drawable.dislikebutton),
-                                contentDescription = "List Desc Placeholder!"
+                                contentDescription = "List Desc Placeholder!",
+                                tint = Color.Black
                             )
                         }
                     }
@@ -92,7 +94,8 @@ fun TingeListScreen(person: TingePerson) {
                                 //PLACEHOLDER ICON
                                 //imageVector = Icons.Filled.CheckCircle,
                                 painter = painterResource(com.example.tinge.R.drawable.likebutton),
-                                contentDescription = "List Desc Placeholder!"
+                                contentDescription = "List Desc Placeholder!",
+                                tint = Color.Red
                             )
                         }
                     }
