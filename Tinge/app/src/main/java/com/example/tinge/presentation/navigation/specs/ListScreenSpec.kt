@@ -1,6 +1,9 @@
 package com.example.tinge.presentation.navigation.specs
 
 import android.content.Context
+import android.graphics.drawable.Icon.createWithResource
+import android.widget.ImageButton
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -16,11 +19,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.presentation.list.TingeListScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
+import com.example.tinge.R
 
 object ListScreenSpec : IScreenSpec{
     private const val LOG_TAG = "Tinge.ListScreenSpec"
@@ -112,7 +120,8 @@ object ListScreenSpec : IScreenSpec{
             IconButton(onClick = {  }) {
                 Icon(
                     //PLACEHOLDER ICON
-                    imageVector = Icons.Filled.Call,
+                    //imageVector = Icons.Filled.Call,
+                    painter = painterResource(R.drawable.explore),
                     contentDescription = "List Desc Placeholder!"
                 )
             }
@@ -120,7 +129,8 @@ object ListScreenSpec : IScreenSpec{
             IconButton(onClick = { navController.navigate(route = ChatListScreenSpec.route) }) {
                 Icon(
                     //PLACEHOLDER ICON
-                    imageVector = Icons.Filled.AddCircle,
+                    //imageVector = Icons.Filled.AddCircle,
+                    painter = painterResource(R.drawable.chaticon),
                     contentDescription = "Chat Desc Placeholder!"
                 )
             }
@@ -128,7 +138,8 @@ object ListScreenSpec : IScreenSpec{
             IconButton(onClick = { navController.navigate(route = ProfileScreenSpec.route) }) {
                 Icon(
                     //PLACEHOLDER ICON
-                    imageVector = Icons.Filled.AccountBox,
+                    //imageVector = Icons.Filled.AccountBox,
+                    painter = painterResource(R.drawable.profile),
                     contentDescription = "Profile Desc Placeholder!"
                 )
             }
