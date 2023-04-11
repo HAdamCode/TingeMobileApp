@@ -37,7 +37,7 @@ fun TingeListScreen(person: TingePerson) {
                 .padding(start = 4.dp, end = 4.dp)
                 .weight(1f)) {
                 Text(
-                    text = person.name,
+                    text = person.firstName + ' ' + person.lastName,
                     fontSize = 34.sp,
                     color = MaterialTheme.colorScheme.primary
                 )

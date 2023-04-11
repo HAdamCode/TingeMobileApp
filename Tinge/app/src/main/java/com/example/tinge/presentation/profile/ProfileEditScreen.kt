@@ -23,10 +23,19 @@ fun ProfileEditScreen(person: TingePerson) {
     val inches = person.height % 12
     Column() {
         TextField(
-            placeholder = { Text(text = person.name)},
-            value = person.name,
+            placeholder = { Text(text = person.firstName)},
+            value = person.firstName,
             onValueChange = {},
-            label = { Text(text = "Name") },
+            label = { Text(text = "First Name") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp, 4.dp, 4.dp, 4.dp)
+        )
+        TextField(
+            placeholder = { Text(text = person.lastName)},
+            value = person.lastName,
+            onValueChange = {},
+            label = { Text(text = "Last Name") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(4.dp, 4.dp, 4.dp, 4.dp)

@@ -92,7 +92,7 @@ object ListScreenSpec : IScreenSpec{
         },
 
          */
-        TopAppBar(title = { Text("List Screen") },
+        TopAppBar(title = { Text("Tinge") },
             actions = {
                 ListScreenSpec.TopAppBarActions(
                     tingeViewModel = tingeViewModel,

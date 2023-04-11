@@ -36,7 +36,7 @@ fun TingeChatListScreen(tingeViewModel: ITingeViewModel, navController: NavHostC
                     Modifier
                         .size(90.dp)
                 )
-                Text(text = person.name, modifier = Modifier
+                Text(text = person.firstName + ' ' + person.lastName, modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 28.dp, start = 22.dp),
                 style = TextStyle(fontSize = 25.sp)

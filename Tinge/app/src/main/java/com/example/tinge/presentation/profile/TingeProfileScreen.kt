@@ -27,7 +27,7 @@ fun TingeProfileScreen(person: TingePerson) {
             .fillMaxWidth()) {
         Column(Modifier.padding(start = 4.dp, end = 4.dp)) {
             Text(
-                text = person.name,
+                text = person.firstName + ' ' + person.lastName,
                 fontSize = 34.sp,
                 color = MaterialTheme.colorScheme.primary
             )
