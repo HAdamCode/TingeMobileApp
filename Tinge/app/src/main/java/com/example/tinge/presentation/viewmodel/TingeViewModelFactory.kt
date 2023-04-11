@@ -6,16 +6,17 @@ import androidx.lifecycle.ViewModelProvider
 import android.content.Context
 import com.example.tinge.data.TingeRepo
 
-class TingeViewModelFactory(context: Context): ViewModelProvider.NewInstanceFactory() {
+class TingeViewModelFactory(context: Context) : ViewModelProvider.NewInstanceFactory() {
     companion object {
         private const val LOG_TAG = "448.TingeViewModelFactory"
     }
+
     val currentContext = context
     fun getViewModelClass() = TingeViewModel::class.java
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         Log.d(LOG_TAG, "create() called")
-        if(modelClass.isAssignableFrom(getViewModelClass())) {
+        if (modelClass.isAssignableFrom(getViewModelClass())) {
             Log.d(LOG_TAG, "creating ViewModel: ${getViewModelClass()}")
             return modelClass
                 .getConstructor(TingeRepo::class.java)

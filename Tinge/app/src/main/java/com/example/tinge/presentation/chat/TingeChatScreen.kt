@@ -1,14 +1,20 @@
 package com.example.tinge.presentation.chat
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import com.example.tinge.data.TingePerson
 
 @Composable
 fun TingeChatScreen(person: TingePerson) {
-    Row() {
-        Text(text = "Chats would appear here")
-    }
-
+    var text by remember { mutableStateOf("") }
+    TextField(
+        modifier = Modifier
+            .fillMaxHeight()
+            .wrapContentHeight(Alignment.Bottom),
+        value = text,
+        onValueChange = { text = it }
+    )
 }

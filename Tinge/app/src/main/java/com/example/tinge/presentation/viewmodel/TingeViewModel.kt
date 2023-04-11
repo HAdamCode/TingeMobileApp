@@ -2,12 +2,9 @@ package com.example.tinge.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.tinge.data.TingePerson
 import com.example.tinge.data.TingeRepo
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import android.content.Context
 import java.util.*
 
 class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeViewModel {
@@ -94,5 +91,4 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
     override fun dislikePerson(characterToDislike: TingePerson) {
         TODO("Not yet implemented")
     }
-
 }

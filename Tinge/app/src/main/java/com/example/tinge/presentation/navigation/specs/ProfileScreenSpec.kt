@@ -17,21 +17,22 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.R
-import com.example.tinge.presentation.list.TingeListScreen
 import com.example.tinge.presentation.profile.TingeProfileScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
-object ProfileScreenSpec: IScreenSpec {
+object ProfileScreenSpec : IScreenSpec {
     private const val LOG_TAG = "Tinge.ProfileScreenSpec"
     override val route = "profile"
     override val arguments: List<NamedNavArgument> = emptyList()
     override fun buildRoute(vararg args: String?) = route
 
     @Composable
-    override fun Content(tingeViewModel: ITingeViewModel,
-                         navController: NavHostController,
-                         navBackStackEntry: NavBackStackEntry,
-                         context: Context) {
+    override fun Content(
+        tingeViewModel: ITingeViewModel,
+        navController: NavHostController,
+        navBackStackEntry: NavBackStackEntry,
+        context: Context
+    ) {
         val person = tingeViewModel.currentPersonState.collectAsState()
         person.value?.let { TingeProfileScreen(it) }
 
@@ -43,7 +44,7 @@ object ProfileScreenSpec: IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
         context: Context
-    ){
+    ) {
         IconButton(onClick = { navController.navigate(route = ProfileEditScreenSpec.route) }) {
             Icon(
                 //PLACEHOLDER ICON
@@ -68,27 +69,7 @@ object ProfileScreenSpec: IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
         context: Context
-    ){
-        /*
-        navigationIcon = if (navController.previousBackStackEntry != null) {
-            {
-                Row(
-                    //verticalAlignment = Alignment.CenterVertically,
-                    //horizontalArrangement = Arrangement.Center
-                ){
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Placeholder"
-                        )
-                    }
-                }
-            }
-        } else {
-            { }
-        },
-
-         */
+    ) {
         TopAppBar(title = { Text("Your Profile") },
             actions = {
                 ProfileScreenSpec.TopAppBarActions(
@@ -112,7 +93,7 @@ object ProfileScreenSpec: IScreenSpec {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-        ){
+        ) {
             //Should have button to navigate to list
             IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
                 Icon(
@@ -134,7 +115,7 @@ object ProfileScreenSpec: IScreenSpec {
                 )
             }
             //Should have button to navigate to profile
-            IconButton(onClick = {  }) {
+            IconButton(onClick = { }) {
                 Icon(
                     //PLACEHOLDER ICON
                     //imageVector = Icons.Filled.AccountBox,
@@ -144,6 +125,5 @@ object ProfileScreenSpec: IScreenSpec {
                 )
             }
         }
-
     }
 }

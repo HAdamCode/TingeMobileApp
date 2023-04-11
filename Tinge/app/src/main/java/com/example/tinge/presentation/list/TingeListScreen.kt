@@ -1,15 +1,9 @@
 package com.example.tinge.presentation.list
 
 import android.content.Context
-import android.graphics.Paint.Align
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,57 +21,65 @@ import kotlin.math.floor
 @Composable
 fun TingeListScreen(person: TingePerson) {
     val context = LocalContext.current
-    val feet = floor(person.height/12.0).toInt()
-    val inches = person.height%12
+    val feet = floor(person.height / 12.0).toInt()
+    val inches = person.height % 12
     Card(
         Modifier
             .fillMaxHeight()
-            .fillMaxWidth()) {
+            .fillMaxWidth()
+    ) {
         Column(
             Modifier
                 .padding(start = 4.dp, end = 4.dp)
-                .weight(1f)) {
+                .weight(1f)
+        ) {
+            Text(
+                text = person.firstName + ' ' + person.lastName,
+                fontSize = 34.sp,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Row() {
                 Text(
-                    text = person.firstName + ' ' + person.lastName,
-                    fontSize = 34.sp,
+                    text = " Age: ${person.age}  | ",
+                    fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Row() {
-                    Text(
-                        text = " Age: ${person.age}  | ",
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = " Height: $feet' $inches\"  | ",
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = " Gender: ${person.gender}",
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                Image(
-                    painter = painterResource(
-                        id =
-                        person.imageId
-                    ),
-                    contentDescription = "",
-                    Modifier
-                        .fillMaxWidth()
-                        .size(350.dp)
-                        .fillMaxHeight()
+                Text(
+                    text = " Height: $feet' $inches\"  | ",
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.primary
                 )
+                Text(
+                    text = " Gender: ${person.gender}",
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            Image(
+                painter = painterResource(
+                    id =
+                    person.imageId
+                ),
+                contentDescription = "",
+                Modifier
+                    .fillMaxWidth()
+                    .size(350.dp)
+                    .fillMaxHeight()
+            )
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()) {
-                    Column(modifier = Modifier.fillMaxWidth().weight(1f),horizontalAlignment = Alignment.CenterHorizontally) {
+                        .fillMaxHeight()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         IconButton(onClick = { dislikeToast(context) }) {
                             Icon(
                                 //PLACEHOLDER ICON
@@ -88,7 +90,12 @@ fun TingeListScreen(person: TingePerson) {
                             )
                         }
                     }
-                    Column(modifier = Modifier.fillMaxWidth().weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         IconButton(onClick = { likeToast(context) }) {
                             Icon(
                                 //PLACEHOLDER ICON
@@ -102,14 +109,12 @@ fun TingeListScreen(person: TingePerson) {
                 }
             }
 
-            }
         }
-
+    }
 }
 
 fun likeToast(context: Context) {
     Toast.makeText(context, "Like button pressed", Toast.LENGTH_SHORT).show()
-
 }
 
 fun dislikeToast(context: Context) {

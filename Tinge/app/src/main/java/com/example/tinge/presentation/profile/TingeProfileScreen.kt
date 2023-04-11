@@ -24,7 +24,8 @@ fun TingeProfileScreen(person: TingePerson) {
     Card(
         Modifier
             .fillMaxHeight()
-            .fillMaxWidth()) {
+            .fillMaxWidth()
+    ) {
         Column(Modifier.padding(start = 4.dp, end = 4.dp)) {
             Text(
                 text = person.firstName + ' ' + person.lastName,
@@ -59,7 +60,6 @@ fun TingeProfileScreen(person: TingePerson) {
                     .size(350.dp)
                     .fillMaxHeight()
             )
-
         }
     }
 }

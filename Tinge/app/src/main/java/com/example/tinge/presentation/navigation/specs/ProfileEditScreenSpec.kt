@@ -16,10 +16,9 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.presentation.profile.ProfileEditScreen
-import com.example.tinge.presentation.profile.TingeProfileScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
-object ProfileEditScreenSpec: IScreenSpec {
+object ProfileEditScreenSpec : IScreenSpec {
     private const val LOG_TAG = "Tinge.ProfileEditScreenSpec"
     override val route = "profileEdit"
     override val arguments: List<NamedNavArgument> = emptyList()
@@ -27,10 +26,11 @@ object ProfileEditScreenSpec: IScreenSpec {
     override fun buildRoute(vararg args: String?) = ProfileScreenSpec.route
 
     @Composable
-    override fun Content(tingeViewModel: ITingeViewModel,
-                         navController: NavHostController,
-                         navBackStackEntry: NavBackStackEntry,
-                         context: Context
+    override fun Content(
+        tingeViewModel: ITingeViewModel,
+        navController: NavHostController,
+        navBackStackEntry: NavBackStackEntry,
+        context: Context
     ) {
         val person = tingeViewModel.currentPersonState.collectAsState()
         person.value?.let { ProfileEditScreen(it) }
@@ -42,7 +42,7 @@ object ProfileEditScreenSpec: IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
         context: Context
-    ){
+    ) {
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -52,13 +52,13 @@ object ProfileEditScreenSpec: IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
         context: Context
-    ){
+    ) {
         TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
             {
                 Row(
                     //verticalAlignment = Alignment.CenterVertically,
                     //horizontalArrangement = Arrangement.Center
-                ){
+                ) {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -93,7 +93,11 @@ object ProfileEditScreenSpec: IScreenSpec {
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            IconButton(onClick = { navController.navigate(route = ListScreenSpec.route); SaveToast(context) }) {
+            IconButton(onClick = {
+                navController.navigate(route = ListScreenSpec.route); SaveToast(
+                context
+            )
+            }) {
                 Icon(
                     //PLACEHOLDER ICON
                     imageVector = Icons.Filled.Check,
@@ -102,6 +106,7 @@ object ProfileEditScreenSpec: IScreenSpec {
             }
         }
     }
+
     fun SaveToast(context: Context) {
         Toast.makeText(context, "Update pressed", Toast.LENGTH_SHORT).show()
     }

@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Call
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,17 +19,19 @@ import com.example.tinge.R
 import com.example.tinge.presentation.chat.TingeChatListScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
-object ChatListScreenSpec: IScreenSpec {
+object ChatListScreenSpec : IScreenSpec {
     private const val LOG_TAG = "Tinge.ChatListScreenSpec"
     override val route = "chatList"
     override val arguments: List<NamedNavArgument> = emptyList()
     override fun buildRoute(vararg args: String?) = route
 
     @Composable
-    override fun Content(tingeViewModel: ITingeViewModel,
-                         navController: NavHostController,
-                         navBackStackEntry: NavBackStackEntry,
-                         context: Context) {
+    override fun Content(
+        tingeViewModel: ITingeViewModel,
+        navController: NavHostController,
+        navBackStackEntry: NavBackStackEntry,
+        context: Context
+    ) {
         TingeChatListScreen(tingeViewModel, navController)
     }
 
@@ -42,7 +41,7 @@ object ChatListScreenSpec: IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
         context: Context
-    ){
+    ) {
         //Should have button to navigate to settings
         IconButton(onClick = { navController.navigate(route = SettingsScreenSpec.route) }) {
             Icon(
@@ -60,27 +59,7 @@ object ChatListScreenSpec: IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
         context: Context
-    ){
-        /*
-navigationIcon = if (navController.previousBackStackEntry != null) {
-            {
-                Row(
-                    //verticalAlignment = Alignment.CenterVertically,
-                    //horizontalArrangement = Arrangement.Center
-                ){
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Placeholder"
-                        )
-                    }
-                }
-            }
-        } else {
-            { }
-        },
-
-         */
+    ) {
         TopAppBar(title = { Text("Chats") },
             actions = {
                 TopAppBarActions(
@@ -104,7 +83,7 @@ navigationIcon = if (navController.previousBackStackEntry != null) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-        ){
+        ) {
             //Should have button to navigate to settings
             IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
                 Icon(
@@ -136,6 +115,5 @@ navigationIcon = if (navController.previousBackStackEntry != null) {
                 )
             }
         }
-
     }
 }

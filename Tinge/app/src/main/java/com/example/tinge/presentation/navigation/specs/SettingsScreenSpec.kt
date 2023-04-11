@@ -13,17 +13,19 @@ import androidx.navigation.NavHostController
 import com.example.tinge.presentation.settings.TingeSettingsScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
-object SettingsScreenSpec: IScreenSpec {
+object SettingsScreenSpec : IScreenSpec {
     private const val LOG_TAG = "Tinge.SettingsScreenSpec"
     override val route = "settings"
     override val arguments: List<NamedNavArgument> = emptyList()
     override fun buildRoute(vararg args: String?) = route
 
     @Composable
-    override fun Content(tingeViewModel: ITingeViewModel,
-                         navController: NavHostController,
-                         navBackStackEntry: NavBackStackEntry,
-                         context: Context) {
+    override fun Content(
+        tingeViewModel: ITingeViewModel,
+        navController: NavHostController,
+        navBackStackEntry: NavBackStackEntry,
+        context: Context
+    ) {
         TingeSettingsScreen()
     }
 
@@ -33,7 +35,7 @@ object SettingsScreenSpec: IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
         context: Context
-    ){
+    ) {
         //Should have button to navigate to settings
         IconButton(onClick = { navController.navigate(route = route) }) {
             Icon(
@@ -51,13 +53,13 @@ object SettingsScreenSpec: IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
         context: Context
-    ){
+    ) {
         TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
             {
                 Row(
                     //verticalAlignment = Alignment.CenterVertically,
                     //horizontalArrangement = Arrangement.Center
-                ){
+                ) {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -70,7 +72,7 @@ object SettingsScreenSpec: IScreenSpec {
             { }
         }, title = { Text("Settings") },
             actions = {
-                SettingsScreenSpec.TopAppBarActions(
+                TopAppBarActions(
                     tingeViewModel = tingeViewModel,
                     navController = navController,
                     navBackStackEntry = navBackStackEntry,
@@ -86,29 +88,5 @@ object SettingsScreenSpec: IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-//        //Should have button to navigate to settings
-//        IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
-//            Icon(
-//                //PLACEHOLDER ICON
-//                imageVector = Icons.Filled.AddCircle,
-//                contentDescription = "List Desc Placeholder!"
-//            )
-//        }
-//        //Should have button to navigate to settings
-//        IconButton(onClick = { navController.navigate(route = ChatScreenSpec.route) }) {
-//            Icon(
-//                //PLACEHOLDER ICON
-//                imageVector = Icons.Filled.AddCircle,
-//                contentDescription = "Chat Desc Placeholder!"
-//            )
-//        }
-//        //Should have button to navigate to settings
-//        IconButton(onClick = { navController.navigate(route = ProfileScreenSpec.route) }) {
-//            Icon(
-//                //PLACEHOLDER ICON
-//                imageVector = Icons.Filled.AddCircle,
-//                contentDescription = "Profile Desc Placeholder!"
-//            )
-//        }
     }
 }

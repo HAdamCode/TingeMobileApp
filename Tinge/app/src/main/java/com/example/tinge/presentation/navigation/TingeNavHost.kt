@@ -28,7 +28,7 @@ fun TingeNavHost(
             startDestination = IScreenSpec.startDestination
         ) {
             IScreenSpec.allScreens.forEach { (_, screen) ->
-                if(screen != null) {
+                if (screen != null) {
                     composable(
                         route = screen.route,
                         arguments = screen.arguments

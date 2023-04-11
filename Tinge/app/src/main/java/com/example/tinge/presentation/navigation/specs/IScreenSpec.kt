@@ -1,32 +1,31 @@
 package com.example.tinge.presentation.navigation.specs
 
 import android.content.Context
-import android.graphics.Color
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
 sealed interface IScreenSpec {
-    companion object{
+    companion object {
         private const val LOG_TAG = "Tinge.IScreenSpec"
 
         val allScreens = IScreenSpec::class.sealedSubclasses.associate {
-            Log.d(LOG_TAG,"allScreens: mapping route \"${it.objectInstance?.route ?: ""}\" to object \"${it.objectInstance}\"")
+            Log.d(
+                LOG_TAG,
+                "allScreens: mapping route \"${it.objectInstance?.route ?: ""}\" to object \"${it.objectInstance}\""
+            )
             it.objectInstance?.route to it.objectInstance
         }
         const val root = "tinge"
         val startDestination = ListScreenSpec.route
+
         @Composable
         fun TopBar(
             tingeViewModel: ITingeViewModel,
@@ -35,7 +34,12 @@ sealed interface IScreenSpec {
             context: Context
         ) {
             val route = navBackStackEntry?.destination?.route ?: ""
-            allScreens[route]?.TopAppBarContent(tingeViewModel, navController, navBackStackEntry, context)
+            allScreens[route]?.TopAppBarContent(
+                tingeViewModel,
+                navController,
+                navBackStackEntry,
+                context
+            )
         }
 
         @Composable
@@ -46,9 +50,15 @@ sealed interface IScreenSpec {
             context: Context
         ) {
             val route = navBackStackEntry?.destination?.route ?: ""
-            allScreens[route]?.BottomAppBarContent(tingeViewModel, navController, navBackStackEntry, context)
+            allScreens[route]?.BottomAppBarContent(
+                tingeViewModel,
+                navController,
+                navBackStackEntry,
+                context
+            )
         }
     }
+
     val route: String
     val arguments: List<NamedNavArgument>
     fun buildRoute(vararg args: String?): String
@@ -60,13 +70,13 @@ sealed interface IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
         context: Context
-    ){
+    ) {
         TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
             {
                 Row(
                     //verticalAlignment = Alignment.CenterVertically,
                     //horizontalArrangement = Arrangement.Center
-                ){
+                ) {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -103,8 +113,8 @@ sealed interface IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry?,
         context: Context
-    ){
-        TopAppBar(title = {  },
+    ) {
+        TopAppBar(title = { },
             actions = {
                 BottomAppBarActions(
                     tingeViewModel = tingeViewModel,
@@ -124,9 +134,10 @@ sealed interface IScreenSpec {
     )
 
     @Composable
-    fun Content(tingeViewModel: ITingeViewModel,
-                navController: NavHostController,
-                navBackStackEntry: NavBackStackEntry,
-                context: Context)
-
+    fun Content(
+        tingeViewModel: ITingeViewModel,
+        navController: NavHostController,
+        navBackStackEntry: NavBackStackEntry,
+        context: Context
+    )
 }
