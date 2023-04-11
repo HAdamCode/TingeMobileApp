@@ -43,8 +43,8 @@ object ListScreenSpec : IScreenSpec{
         navBackStackEntry: NavBackStackEntry,
         context: Context
     ) {
-        val person = tingeViewModel.currentPersonState.collectAsState()
-        person.value?.let { TingeListScreen(it) }
+        val personList = tingeViewModel.personListState.collectAsState()
+        TingeListScreen(person = personList.value.first())
     }
 
     @Composable
