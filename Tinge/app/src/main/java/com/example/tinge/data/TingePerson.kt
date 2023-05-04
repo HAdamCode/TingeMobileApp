@@ -6,5 +6,9 @@ data class TingePerson(
     val imageId: Int,
     var age: Int,
     val height: Int,
-    val gender: String
+    val gender: String,
+    val email: String?
 )
+{
+    constructor() : this("", "", 0, 0, 0, "", "")
+}

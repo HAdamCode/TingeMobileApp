@@ -1,5 +1,6 @@
 package com.example.tinge.presentation.profile
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tinge.data.TingePerson
 import com.example.tinge.data.TingeRepo
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlin.math.floor
 
 @Composable
@@ -24,6 +28,30 @@ fun ProfileEditScreen(person: TingePerson) {
     var feet by remember { mutableStateOf(floor((person.height / 12.0)).toString()) }
     var inches by remember { mutableStateOf((person.height % 12).toString()) }
     var age by remember { mutableStateOf(person.age.toString()) }
+
+    val userEmail = FirebaseAuth.getInstance().currentUser?.email
+    val db = Firebase.firestore
+    val collectionRef = db.collection("TingePerson")
+//    val data = TingePerson(firstName = "Hunter", lastName = "Adam", imageId = 123, age = 21, height = 63, gender = "Male")
+//    val documentRef = collectionRef.document()
+//    documentRef.set(data)
+    collectionRef.whereEqualTo("email", userEmail)
+        .get()
+        .addOnSuccessListener { documents ->
+            for (document in documents) {
+                Log.d("TAG", "${document.id} => ${document.data}")
+                val tingePerson = document.toObject(TingePerson::class.java)
+                firstName = tingePerson.firstName
+                lastName = tingePerson.lastName
+                feet = floor((tingePerson.height / 12.0)).toString()
+                inches = (tingePerson.height % 12).toString()
+                age = tingePerson.age.toString()
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.w("TAG", "Error getting documents: ", exception)
+        }
+    Log.d("Profile Edit", "Here")
     Column() {
         TextField(
             placeholder = { Text(text = person.firstName) },

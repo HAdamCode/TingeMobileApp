@@ -11,6 +11,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
+import kotlinx.coroutines.CoroutineScope
 
 sealed interface IScreenSpec {
     companion object {
@@ -138,6 +139,7 @@ sealed interface IScreenSpec {
         tingeViewModel: ITingeViewModel,
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry,
+        coroutineScope: CoroutineScope,
         context: Context
     )
 }

@@ -10,6 +10,10 @@ interface ITingeViewModel {
 
     fun addPerson(personToAdd: TingePerson)
 
+    fun updatePerson(email: String?)
+
+    fun checkIfInDB(): Boolean
+
     fun likePerson(personToLike: TingePerson)
 
     fun dislikePerson(personToDislike: TingePerson)

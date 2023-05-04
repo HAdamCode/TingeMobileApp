@@ -4,8 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.tinge.data.TingePerson
 import com.example.tinge.data.TingeRepo
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.*
 import java.util.*
+import kotlin.math.floor
 
 class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeViewModel {
     companion object {
@@ -62,6 +66,20 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         Log.d(LOG_TAG, "adding character $personToAdd")
         mPersonListState.value += personToAdd
         mCurrentPersonState.value = personToAdd
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+        val db = Firebase.firestore
+        val collectionRef = db.collection("TingePerson")
+        val data = TingePerson(
+            firstName = "Hunter",
+            lastName = "Adam",
+            imageId = 123,
+            age = 21,
+            height = 63,
+            gender = "Male",
+            email = userEmail
+        )
+        val documentRef = collectionRef.document()
+        documentRef.set(data)
     }
 
     /**
@@ -83,6 +101,26 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 //        }
 //        Log.d(LOG_TAG, "Character not found")
 //    }
+
+    override fun updatePerson(email: String?) {
+
+    }
+
+    override fun checkIfInDB(): Boolean {
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+        val db = Firebase.firestore
+        val collectionRef = db.collection("TingePerson")
+        var numberOfDocs = 0
+        collectionRef.whereEqualTo("email", userEmail)
+            .get()
+            .addOnSuccessListener { documents ->
+                numberOfDocs = documents.size()
+            }
+            .addOnFailureListener { exception ->
+                Log.w("TAG", "Error getting documents: ", exception)
+            }
+        return numberOfDocs > 0
+    }
 
     override fun likePerson(characterToLike: TingePerson) {
         TODO("Not yet implemented")

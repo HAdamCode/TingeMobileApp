@@ -12,6 +12,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.presentation.settings.TingeSettingsScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
+import kotlinx.coroutines.CoroutineScope
 
 object SettingsScreenSpec : IScreenSpec {
     private const val LOG_TAG = "Tinge.SettingsScreenSpec"
@@ -24,6 +25,7 @@ object SettingsScreenSpec : IScreenSpec {
         tingeViewModel: ITingeViewModel,
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry,
+        coroutineScope: CoroutineScope,
         context: Context
     ) {
         TingeSettingsScreen()

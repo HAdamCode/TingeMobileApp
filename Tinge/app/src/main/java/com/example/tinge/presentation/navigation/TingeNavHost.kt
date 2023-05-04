@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.tinge.presentation.navigation.specs.IScreenSpec
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
+import kotlinx.coroutines.CoroutineScope
 
 
 @Composable
@@ -16,6 +17,7 @@ fun TingeNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     tingeViewModel: ITingeViewModel,
+    coroutineScope: CoroutineScope,
     context: Context
 ) {
     NavHost(
@@ -37,6 +39,7 @@ fun TingeNavHost(
                             tingeViewModel = tingeViewModel,
                             navController = navController,
                             navBackStackEntry = navBackStackEntry,
+                            coroutineScope = coroutineScope,
                             context = context
                         )
                     }

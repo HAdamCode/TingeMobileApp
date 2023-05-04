@@ -22,6 +22,7 @@ import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import com.example.tinge.presentation.viewmodel.TingeViewModelFactory
 import com.example.tinge.ui.theme.TingeTheme
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.rememberCoroutineScope
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -30,7 +31,12 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 
-//class MainActivity : ComponentActivity() {
+// DO NOT DELETE PLEASE
+//    val db = Firebase.firestore
+//    val collectionRef = db.collection("TingePerson")
+//    val data = TingePerson(firstName = "Hunter", lastName = "Adam", imageId = 123, age = 21, height = 63, gender = "Male")
+//    val documentRef = collectionRef.document()
+//    documentRef.set(data)
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val LOG_TAG = "448.MainActivity"
@@ -58,6 +64,11 @@ class MainActivity : AppCompatActivity() {
         setContent {
             createSignInIntent(signInLauncher)
             MainActivityContent(tingeViewModel = mTingeViewModel)
+//            val temp = FirebaseAuth.getInstance().currentUser?.email
+//            if (temp == null)
+//                Log.d(LOG_TAG, "null user")
+//            else
+//                Log.d(LOG_TAG, temp)
         }
     }
 }
@@ -65,6 +76,7 @@ class MainActivity : AppCompatActivity() {
 @Composable
 private fun MainActivityContent(tingeViewModel: ITingeViewModel) {
     val navController = rememberNavController()
+    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
     TingeTheme() {
@@ -85,6 +97,7 @@ private fun MainActivityContent(tingeViewModel: ITingeViewModel) {
                     Modifier.padding(it),
                     navController = navController,
                     context = context,
+                    coroutineScope = coroutineScope,
                     tingeViewModel = tingeViewModel
                 )
             }

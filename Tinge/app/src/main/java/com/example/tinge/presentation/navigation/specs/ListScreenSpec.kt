@@ -19,6 +19,7 @@ import androidx.navigation.NavHostController
 import com.example.tinge.presentation.list.TingeListScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import com.example.tinge.R
+import kotlinx.coroutines.CoroutineScope
 
 object ListScreenSpec : IScreenSpec {
     private const val LOG_TAG = "Tinge.ListScreenSpec"
@@ -31,6 +32,7 @@ object ListScreenSpec : IScreenSpec {
         tingeViewModel: ITingeViewModel,
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry,
+        coroutineScope: CoroutineScope,
         context: Context
     ) {
         val personList = tingeViewModel.personListState.collectAsState()

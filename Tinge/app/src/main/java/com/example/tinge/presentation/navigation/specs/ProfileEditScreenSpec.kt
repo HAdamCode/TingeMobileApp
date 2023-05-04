@@ -12,11 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.presentation.profile.ProfileEditScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 
 object ProfileEditScreenSpec : IScreenSpec {
     private const val LOG_TAG = "Tinge.ProfileEditScreenSpec"
@@ -30,9 +33,12 @@ object ProfileEditScreenSpec : IScreenSpec {
         tingeViewModel: ITingeViewModel,
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry,
+        coroutineScope: CoroutineScope,
         context: Context
     ) {
-        val person = tingeViewModel.currentPersonState.collectAsState()
+        val person =
+            tingeViewModel.currentPersonState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+
         person.value?.let { ProfileEditScreen(it) }
     }
 
