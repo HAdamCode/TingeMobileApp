@@ -35,6 +35,7 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
     var feet by remember { mutableStateOf(floor((person.height / 12.0)).toInt().toString()) }
     var inches by remember { mutableStateOf((person.height % 12).toString()) }
     var age by remember { mutableStateOf(person.age.toString()) }
+    var gender by remember { mutableStateOf(person.gender) }
 
 //    val userEmail = FirebaseAuth.getInstance().currentUser?.email
 //    val db = Firebase.firestore
@@ -113,6 +114,18 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
             maxLines = 1,
             singleLine = true,
         )
+        TextField(
+            // TODO: Fix the values not changing. Maybe use a remember from MosterLab
+            placeholder = { Text(text = person.gender) },
+            value = gender,
+            onValueChange = { gender = it },
+            label = { Text(text = "Gender") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp, 4.dp, 4.dp, 4.dp),
+            maxLines = 1,
+            singleLine = true,
+        )
         Button(onClick = {
             // TODO fix gender and picture
             Log.d("test", feet.toInt().toString())
@@ -123,7 +136,7 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                 123,
                 age.toInt(),
                 (feet.toInt() * 12) + inches.toInt(),
-                "Male",
+                gender,
                 FirebaseAuth.getInstance().currentUser?.email
             )
             if (tingeViewModel.checkIfInDB()) {
