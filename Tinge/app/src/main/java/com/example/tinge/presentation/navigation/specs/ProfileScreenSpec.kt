@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -35,7 +36,8 @@ object ProfileScreenSpec : IScreenSpec {
         coroutineScope: CoroutineScope,
         context: Context
     ) {
-        val person = tingeViewModel.currentPersonState.collectAsState()
+        tingeViewModel.checkIfInDB()
+        val person = tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
         person.value?.let { TingeProfileScreen(it) }
 
     }

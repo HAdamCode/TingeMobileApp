@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
@@ -16,41 +17,43 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tinge.data.TingePerson
 import com.example.tinge.data.TingeRepo
+import com.example.tinge.presentation.viewmodel.ITingeViewModel
+import com.example.tinge.presentation.viewmodel.TingeViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlin.math.floor
 
 @Composable
-fun ProfileEditScreen(person: TingePerson) {
+fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
     var firstName by remember { mutableStateOf(person.firstName) }
     var lastName by remember { mutableStateOf(person.lastName) }
-    var feet by remember { mutableStateOf(floor((person.height / 12.0)).toString()) }
+    var feet by remember { mutableStateOf(floor((person.height / 12.0)).toInt().toString()) }
     var inches by remember { mutableStateOf((person.height % 12).toString()) }
     var age by remember { mutableStateOf(person.age.toString()) }
 
-    val userEmail = FirebaseAuth.getInstance().currentUser?.email
-    val db = Firebase.firestore
-    val collectionRef = db.collection("TingePerson")
-//    val data = TingePerson(firstName = "Hunter", lastName = "Adam", imageId = 123, age = 21, height = 63, gender = "Male")
-//    val documentRef = collectionRef.document()
-//    documentRef.set(data)
-    collectionRef.whereEqualTo("email", userEmail)
-        .get()
-        .addOnSuccessListener { documents ->
-            for (document in documents) {
-                Log.d("TAG", "${document.id} => ${document.data}")
-                val tingePerson = document.toObject(TingePerson::class.java)
-                firstName = tingePerson.firstName
-                lastName = tingePerson.lastName
-                feet = floor((tingePerson.height / 12.0)).toString()
-                inches = (tingePerson.height % 12).toString()
-                age = tingePerson.age.toString()
-            }
-        }
-        .addOnFailureListener { exception ->
-            Log.w("TAG", "Error getting documents: ", exception)
-        }
+//    val userEmail = FirebaseAuth.getInstance().currentUser?.email
+//    val db = Firebase.firestore
+//    val collectionRef = db.collection("TingePerson")
+////    val data = TingePerson(firstName = "Hunter", lastName = "Adam", imageId = 123, age = 21, height = 63, gender = "Male")
+////    val documentRef = collectionRef.document()
+////    documentRef.set(data)
+//    collectionRef.whereEqualTo("email", userEmail)
+//        .get()
+//        .addOnSuccessListener { documents ->
+//            for (document in documents) {
+//                Log.d("TAG", "${document.id} => ${document.data}")
+//                val tingePerson = document.toObject(TingePerson::class.java)
+//                firstName = tingePerson.firstName
+//                lastName = tingePerson.lastName
+//                feet = floor((tingePerson.height / 12.0)).toString()
+//                inches = (tingePerson.height % 12).toString()
+//                age = tingePerson.age.toString()
+//            }
+//        }
+//        .addOnFailureListener { exception ->
+//            Log.w("TAG", "Error getting documents: ", exception)
+//        }
     Log.d("Profile Edit", "Here")
     Column() {
         TextField(
@@ -106,11 +109,35 @@ fun ProfileEditScreen(person: TingePerson) {
             maxLines = 1,
             singleLine = true,
         )
+        Button(onClick = {
+            // TODO fix gender and picture
+            Log.d("test", feet.toInt().toString())
+            Log.d("test", inches)
+            val tingePerson = TingePerson(
+                firstName,
+                lastName,
+                123,
+                age.toInt(),
+                (feet.toInt() * 12) + inches.toInt(),
+                "Male",
+                FirebaseAuth.getInstance().currentUser?.email
+            )
+            if (tingeViewModel.checkIfInDB()) {
+                Log.d("ProfileEditScreen", "Inside good one")
+                tingeViewModel.updatePerson(tingePerson)
+            }
+            else {
+                Log.d("ProfileEditScreen", "Inside bad one")
+                tingeViewModel.addPerson(tingePerson)
+            }
+        }) {
+            Text(text = "Save")
+        }
     }
 }
 
 @Preview
 @Composable
 fun PreviewProfileEditScreen() {
-    ProfileEditScreen(person = TingeRepo.getInstance(LocalContext.current).persons.last())
+//    ProfileEditScreen(person = TingeRepo.getInstance(LocalContext.current).persons.last())
 }

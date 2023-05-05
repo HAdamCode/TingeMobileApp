@@ -49,17 +49,17 @@ fun TingeProfileScreen(person: TingePerson) {
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            Image(
-                painter = painterResource(
-                    id =
-                    person.imageId
-                ),
-                contentDescription = "",
-                Modifier
-                    .fillMaxWidth()
-                    .size(350.dp)
-                    .fillMaxHeight()
-            )
+//            Image(
+//                painter = painterResource(
+//                    id =
+//                    person.imageId
+//                ),
+//                contentDescription = "",
+//                Modifier
+//                    .fillMaxWidth()
+//                    .size(350.dp)
+//                    .fillMaxHeight()
+//            )
         }
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -35,7 +36,7 @@ object ListScreenSpec : IScreenSpec {
         coroutineScope: CoroutineScope,
         context: Context
     ) {
-        val personList = tingeViewModel.personListState.collectAsState()
+        val personList = tingeViewModel.personListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
         TingeListScreen(person = personList.value.first())
     }
 

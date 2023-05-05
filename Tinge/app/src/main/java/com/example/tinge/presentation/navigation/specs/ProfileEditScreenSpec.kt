@@ -36,10 +36,11 @@ object ProfileEditScreenSpec : IScreenSpec {
         coroutineScope: CoroutineScope,
         context: Context
     ) {
+        tingeViewModel.checkIfInDB()
         val person =
-            tingeViewModel.currentPersonState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+            tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 
-        person.value?.let { ProfileEditScreen(it) }
+        person.value?.let { ProfileEditScreen(it, tingeViewModel) }
     }
 
     @Composable
@@ -100,6 +101,9 @@ object ProfileEditScreenSpec : IScreenSpec {
                 .fillMaxWidth()
         ) {
             IconButton(onClick = {
+                if (tingeViewModel.checkIfInDB()) {
+//                    tingeViewModel.updatePerson()
+                }
                 navController.navigate(route = ListScreenSpec.route); SaveToast(
                 context
             )
