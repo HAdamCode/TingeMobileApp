@@ -17,6 +17,8 @@ interface ITingeViewModel {
 
     fun checkIfInDB(): Boolean
 
+    fun getRandomProfile()
+
     fun likePerson(personToLike: TingePerson)
 
     fun dislikePerson(personToDislike: TingePerson)

@@ -53,6 +53,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
         val db = Firebase.firestore
         val collectionRef = db.collection("TingePerson")
+        getRandomProfile()
 //        if (userEmail != null) {
 //            Log.d("TingeViewModel", userEmail)
 //        }
@@ -80,15 +81,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                     documentRef.set(data)
                 }
                 for (document in documents) {
-//                    document.toObject(TingePerson::class.java).email?.let {
-//                        Log.d("TingeViewModel",
-//                            it
-//                        )
-//                    }
                     mCurrentUserState.update { document.toObject(TingePerson::class.java) }
-//                    mPersonListState.value += document.toObject(TingePerson::class.java)
-//                    mCurrentPersonState.value = document.toObject(TingePerson::class.java)
-//                    mPersons += document.toObject(TingePerson::class.java)
                 }
             }
             .addOnFailureListener { exception ->
@@ -198,6 +191,23 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
             }
 //        Log.d("TingeViewsssssModel", numberOfDocs.toString())
         return numberOfDocs
+    }
+
+    override fun getRandomProfile() {
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+        val db = Firebase.firestore
+        val collectionRef = db.collection("TingePerson")
+        collectionRef.whereNotEqualTo("email", userEmail)
+            .get()
+            .addOnSuccessListener { documents ->
+                val rand = (0..documents.documents.size).random()
+                for (document in documents) {
+                    mCurrentPersonState.update { document.toObject(TingePerson::class.java) }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("TAG", "Error getting documents: ", exception)
+            }
     }
 
     override fun likePerson(characterToLike: TingePerson) {

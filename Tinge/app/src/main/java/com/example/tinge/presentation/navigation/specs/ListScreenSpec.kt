@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,10 +38,14 @@ object ListScreenSpec : IScreenSpec {
         coroutineScope: CoroutineScope,
         context: Context
     ) {
-        val personList = tingeViewModel.personListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
-        Log.d("ListScreenSpec", personList.value.toString())
-        if (!personList.value.isNullOrEmpty())
-            TingeListScreen(person = personList.value.first())
+        tingeViewModel.getRandomProfile()
+        val personList = tingeViewModel.currentPersonState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+//        Log.d("ListScreenSpec", personList.value.toString())
+
+        val person = personList.value
+        if (person != null) {
+            TingeListScreen(person = person)
+        }
     }
 
     @Composable
