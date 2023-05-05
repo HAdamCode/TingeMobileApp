@@ -40,7 +40,7 @@ object ProfileEditScreenSpec : IScreenSpec {
         val person =
             tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 
-        person.value?.let { ProfileEditScreen(it, tingeViewModel) }
+        person.value?.let { ProfileEditScreen(it, tingeViewModel, navController, context) }
     }
 
     @Composable

@@ -1,5 +1,6 @@
 package com.example.tinge.presentation.profile
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,8 +16,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.tinge.data.TingePerson
 import com.example.tinge.data.TingeRepo
+import com.example.tinge.presentation.navigation.specs.ListScreenSpec
+import com.example.tinge.presentation.navigation.specs.ProfileEditScreenSpec
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import com.example.tinge.presentation.viewmodel.TingeViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -25,7 +29,7 @@ import com.google.firebase.ktx.Firebase
 import kotlin.math.floor
 
 @Composable
-fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
+fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navController: NavHostController, context: Context) {
     var firstName by remember { mutableStateOf(person.firstName) }
     var lastName by remember { mutableStateOf(person.lastName) }
     var feet by remember { mutableStateOf(floor((person.height / 12.0)).toInt().toString()) }
@@ -125,6 +129,10 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
             if (tingeViewModel.checkIfInDB()) {
                 Log.d("ProfileEditScreen", "Inside good one")
                 tingeViewModel.updatePerson(tingePerson)
+                navController.navigate(route = ListScreenSpec.route);
+                ProfileEditScreenSpec.SaveToast(
+                    context
+                )
             }
             else {
                 Log.d("ProfileEditScreen", "Inside bad one")

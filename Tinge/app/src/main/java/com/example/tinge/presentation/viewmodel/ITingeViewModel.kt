@@ -9,6 +9,7 @@ interface ITingeViewModel {
     val personListState: StateFlow<List<TingePerson>>
     val currentPersonState: StateFlow<TingePerson?>
     val currentUserState: StateFlow<TingePerson?>
+    val currentEditProfileState: StateFlow<TingePerson?>
 
     fun addPerson(personToAdd: TingePerson)
 

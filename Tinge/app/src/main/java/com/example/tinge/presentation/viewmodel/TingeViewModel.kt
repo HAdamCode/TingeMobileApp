@@ -40,19 +40,25 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
     override val currentUserState: StateFlow<TingePerson?>
         get() = mCurrentUserState
 
+    private val mCurrentEditProfileState: MutableStateFlow<TingePerson?> =
+        MutableStateFlow(null)
+
+    override val currentEditProfileState: StateFlow<TingePerson?>
+        get() = mCurrentEditProfileState
+
     init {
         Log.d(LOG_TAG, "Characters do be adding")
-        addPerson(tingeRepo.persons.first())
+//        addPerson(tingeRepo.persons.first())
 //        addPerson(tingeRepo.persons.last())
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
         val db = Firebase.firestore
         val collectionRef = db.collection("TingePerson")
-        if (userEmail != null) {
-            Log.d("TingeViewModel", userEmail)
-        }
-        else {
-            Log.d("TingeViewModel", "No email")
-        }
+//        if (userEmail != null) {
+//            Log.d("TingeViewModel", userEmail)
+//        }
+//        else {
+//            Log.d("TingeViewModel", "No email")
+//        }
         collectionRef.whereEqualTo("email", userEmail)
             .get()
             .addOnSuccessListener { documents ->
@@ -60,15 +66,28 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 //                    mCurrentUserState.update { null }
 //                }
                 Log.d("TingeViewModel", "Inside viewmodel for loop")
+                if (documents.documents.isEmpty()) {
+                    val data = TingePerson(
+                        firstName = "",
+                        lastName = "",
+                        imageId = 0,
+                        age = 0,
+                        height = 0,
+                        gender = "",
+                        email = userEmail
+                    )
+                    val documentRef = collectionRef.document()
+                    documentRef.set(data)
+                }
                 for (document in documents) {
-                    document.toObject(TingePerson::class.java).email?.let {
-                        Log.d("TingeViewModel",
-                            it
-                        )
-                    }
+//                    document.toObject(TingePerson::class.java).email?.let {
+//                        Log.d("TingeViewModel",
+//                            it
+//                        )
+//                    }
                     mCurrentUserState.update { document.toObject(TingePerson::class.java) }
-                    mPersonListState.value += document.toObject(TingePerson::class.java)
-                    mCurrentPersonState.value = document.toObject(TingePerson::class.java)
+//                    mPersonListState.value += document.toObject(TingePerson::class.java)
+//                    mCurrentPersonState.value = document.toObject(TingePerson::class.java)
 //                    mPersons += document.toObject(TingePerson::class.java)
                 }
             }
@@ -103,22 +122,22 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
      */
     override fun addPerson(personToAdd: TingePerson) {
         Log.d(LOG_TAG, "adding character $personToAdd")
-        mPersonListState.value += personToAdd
-        mCurrentPersonState.value = personToAdd
-//        val userEmail = FirebaseAuth.getInstance().currentUser?.email
-//        val db = Firebase.firestore
-//        val collectionRef = db.collection("TingePerson")
-//        val data = TingePerson(
-//            firstName = "Hunter",
-//            lastName = "Adam",
-//            imageId = 123,
-//            age = 21,
-//            height = 63,
-//            gender = "Male",
-//            email = userEmail
-//        )
-//        val documentRef = collectionRef.document()
-//        documentRef.set(data)
+//        mPersonListState.value += personToAdd
+//        mCurrentPersonState.value = personToAdd
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+        val db = Firebase.firestore
+        val collectionRef = db.collection("TingePerson")
+        val data = TingePerson(
+            firstName = "Hunter",
+            lastName = "Adam",
+            imageId = 123,
+            age = 21,
+            height = 63,
+            gender = "Male",
+            email = userEmail
+        )
+        val documentRef = collectionRef.document()
+        documentRef.set(data)
     }
 
     /**

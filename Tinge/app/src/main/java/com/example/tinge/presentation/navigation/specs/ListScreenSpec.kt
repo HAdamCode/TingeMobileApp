@@ -1,6 +1,7 @@
 package com.example.tinge.presentation.navigation.specs
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,7 +38,9 @@ object ListScreenSpec : IScreenSpec {
         context: Context
     ) {
         val personList = tingeViewModel.personListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
-        TingeListScreen(person = personList.value.first())
+        Log.d("ListScreenSpec", personList.value.toString())
+        if (!personList.value.isNullOrEmpty())
+            TingeListScreen(person = personList.value.first())
     }
 
     @Composable
