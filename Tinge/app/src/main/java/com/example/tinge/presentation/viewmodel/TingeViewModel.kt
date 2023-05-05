@@ -197,12 +197,20 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
         val db = Firebase.firestore
         val collectionRef = db.collection("TingePerson")
-        collectionRef.whereNotEqualTo("email", userEmail)
+//        Log.d("TingeViewModel", "Got a document ${userEmail}")
+        val query = collectionRef.whereEqualTo("gender", "Male")
             .get()
+//        Log.d("TingeViewModel", "Got a document ${query.}")
             .addOnSuccessListener { documents ->
-                val rand = (0..documents.documents.size).random()
+                Log.d("TingeViewModel", "Got a document ${documents.documents.size}")
+                val rand = (0 until documents.documents.size).random()
+                var i = 0
+
                 for (document in documents) {
-                    mCurrentPersonState.update { document.toObject(TingePerson::class.java) }
+                    Log.d("TingeViewModel", "Got a document")
+                    if (i == rand)
+                        mCurrentPersonState.update { document.toObject(TingePerson::class.java) }
+                    i++
                 }
             }
             .addOnFailureListener { exception ->

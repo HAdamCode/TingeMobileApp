@@ -38,13 +38,16 @@ object ListScreenSpec : IScreenSpec {
         coroutineScope: CoroutineScope,
         context: Context
     ) {
-        tingeViewModel.getRandomProfile()
+//        tingeViewModel.getRandomProfile()
         val personList = tingeViewModel.currentPersonState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 //        Log.d("ListScreenSpec", personList.value.toString())
 
         val person = personList.value
         if (person != null) {
-            TingeListScreen(person = person)
+            TingeListScreen(person = person, tingeViewModel)
+        }
+        else {
+            tingeViewModel.getRandomProfile()
         }
     }
 

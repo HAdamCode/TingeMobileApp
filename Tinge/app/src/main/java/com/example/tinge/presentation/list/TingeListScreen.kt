@@ -16,10 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tinge.data.TingePerson
 import com.example.tinge.data.TingeRepo
+import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import kotlin.math.floor
 
 @Composable
-fun TingeListScreen(person: TingePerson) {
+fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
     val context = LocalContext.current
     val feet = floor(person.height / 12.0).toInt()
     val inches = person.height % 12
@@ -80,7 +81,10 @@ fun TingeListScreen(person: TingePerson) {
                             .weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        IconButton(onClick = { dislikeToast(context) }) {
+                        IconButton(onClick = {
+                            tingeViewModel.getRandomProfile()
+                            dislikeToast(context)
+                        }) {
                             Icon(
                                 //PLACEHOLDER ICON
                                 //imageVector = Icons.Filled.Delete,
@@ -96,7 +100,10 @@ fun TingeListScreen(person: TingePerson) {
                             .weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        IconButton(onClick = { likeToast(context) }) {
+                        IconButton(onClick = {
+                            tingeViewModel.getRandomProfile()
+                            likeToast(context)
+                        }) {
                             Icon(
                                 //PLACEHOLDER ICON
                                 //imageVector = Icons.Filled.CheckCircle,
@@ -121,14 +128,14 @@ fun dislikeToast(context: Context) {
     Toast.makeText(context, "Dislike button pressed", Toast.LENGTH_SHORT).show()
 }
 
-@Preview
-@Composable
-fun PreviewTingeProfileScreen() {
-    TingeListScreen(person = TingeRepo.getInstance(LocalContext.current).persons.first())
-}
-
-@Preview
-@Composable
-fun PreviewTingeProfileScreen2() {
-    TingeListScreen(person = TingeRepo.getInstance(LocalContext.current).persons.last())
-}
+//@Preview
+//@Composable
+//fun PreviewTingeProfileScreen() {
+//    TingeListScreen(person = TingeRepo.getInstance(LocalContext.current).persons.first())
+//}
+//
+//@Preview
+//@Composable
+//fun PreviewTingeProfileScreen2() {
+//    TingeListScreen(person = TingeRepo.getInstance(LocalContext.current).persons.last())
+//}
