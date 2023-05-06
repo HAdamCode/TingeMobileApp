@@ -94,27 +94,27 @@ object ProfileEditScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            IconButton(onClick = {
-                if (tingeViewModel.checkIfInDB()) {
-//                    tingeViewModel.updatePerson()
-                }
-                navController.navigate(route = ListScreenSpec.route); SaveToast(
-                context
-            )
-            }) {
-                Icon(
-                    //PLACEHOLDER ICON
-                    imageVector = Icons.Filled.Check,
-                    contentDescription = "Save update"
-                )
-            }
-        }
+//        Row(
+//            horizontalArrangement = Arrangement.Center,
+//            verticalAlignment = Alignment.CenterVertically,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//        ) {
+//            IconButton(onClick = {
+//                if (tingeViewModel.checkIfInDB()) {
+////                    tingeViewModel.updatePerson()
+//                }
+//                navController.navigate(route = ListScreenSpec.route); SaveToast(
+//                context
+//            )
+//            }) {
+//                Icon(
+//                    //PLACEHOLDER ICON
+//                    imageVector = Icons.Filled.Check,
+//                    contentDescription = "Save update"
+//                )
+//            }
+//        }
     }
 
     fun SaveToast(context: Context) {
