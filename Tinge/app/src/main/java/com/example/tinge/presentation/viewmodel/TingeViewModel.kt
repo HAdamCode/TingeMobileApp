@@ -258,16 +258,30 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 //                    Log.d("Tinge View Model", chat.currentuser)
 //                    Log.d("Tinge View Model", chat.liked.toString())
                     if (chat.liked) {
-                        collectionRef = db.collection("TingePerson")
-                        collectionRef.whereEqualTo("email", chat.otheruser).get().addOnSuccessListener { documents ->
+                        collectionRef.whereEqualTo("currentuser", userEmail.toString())
+                            .get()
+                            .addOnSuccessListener { documents ->
+//                Log.d("Tinge View Model", "getChatPersonList success")
+                                for (document in documents) {
+                                    val chat = document.toObject(TingeMatches::class.java)
+
+                                    if (chat.liked) {
+                                        collectionRef = db.collection("TingePerson")
+                                        collectionRef.whereEqualTo("email", chat.otheruser).get()
+                                            .addOnSuccessListener { documents ->
 //                            Log.d("Tinge View Model", "getChatPersonList success2")
-                            for (document in documents) {
-                                mChatListState.value += document.toObject(TingePerson::class.java)
-                                break
+                                                for (document in documents) {
+                                                    mChatListState.value += document.toObject(
+                                                        TingePerson::class.java
+                                                    )
+                                                    break
+                                                }
+                                            }
+
+                                    }
+                                }
                             }
-                        }
                     }
-                    break
                 }
             }
             .addOnFailureListener { exception ->
@@ -315,6 +329,28 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         val collectionRef = db.collection("Messages")
         val documentRef = collectionRef.document()
         documentRef.set(messages)
+    }
+
+    override fun addMatch(person: TingePerson, likeDislike: Boolean) {
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+        val db = Firebase.firestore
+        val collectionRef = db.collection("Matches")
+
+        collectionRef.whereEqualTo("currentuser", userEmail)
+            .whereEqualTo("otheruser", person.email)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot.documents.size == 0) {
+                    val documentRef = collectionRef.document()
+                    if (userEmail != null && person.email != null) {
+                        val match = TingeMatches(userEmail, person.email, likeDislike)
+                        documentRef.set(match)
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("TAG", "Error getting documents: ", exception)
+            }
     }
 
     override fun likePerson(characterToLike: TingePerson) {

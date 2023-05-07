@@ -28,6 +28,8 @@ interface ITingeViewModel {
 
     fun sendMessage(message: TingeMessages)
 
+    fun addMatch(person: TingePerson, likeDislike: Boolean)
+
     fun likePerson(personToLike: TingePerson)
 
     fun dislikePerson(personToDislike: TingePerson)

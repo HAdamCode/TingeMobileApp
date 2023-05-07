@@ -52,29 +52,28 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
         val state = rememberDismissState(
             confirmStateChange = {
                 if (willDismissDirection == DismissDirection.EndToStart) {
+                    tingeViewModel.addMatch(person, true)
                     tingeViewModel.getRandomProfile()
                     likeToast(context)
-                    true
-                } else {
-                    false
                 }
-                if (willDismissDirection == DismissDirection.StartToEnd) {
+                else if (willDismissDirection == DismissDirection.StartToEnd) {
+                    tingeViewModel.addMatch(person, false)
                     tingeViewModel.getRandomProfile()
                     dislikeToast(context)
-                    true
-                } else {
-                    false
                 }
+                false
             }
         )
         LaunchedEffect(key1 = Unit, block = {
             snapshotFlow { state.offset.value }
                 .collect {
-                    willDismissDirection = when {
-                        it > 300f -> {
+                    Log.d("TingeListScreen", it.toString())
+                    willDismissDirection =
+                        when {
+                        it > 400f -> {
                             DismissDirection.EndToStart
                         }
-                        it < 300f -> {
+                        it < -400f -> {
                             DismissDirection.StartToEnd
                         }
 
@@ -85,9 +84,9 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
         SwipeToDismiss(
             dismissThresholds = {
                 if (it == DismissDirection.StartToEnd) {
-                    FractionalThreshold(4f)
+                    FractionalThreshold(100f)
                 } else {
-                    FractionalThreshold(4f)
+                    FractionalThreshold(100f)
                 }
             },
             background = {
@@ -148,6 +147,7 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             IconButton(onClick = {
+                                tingeViewModel.addMatch(person, false)
                                 tingeViewModel.getRandomProfile()
                                 dislikeToast(context)
                             }) {
@@ -167,6 +167,7 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             IconButton(onClick = {
+                                tingeViewModel.addMatch(person, true)
                                 tingeViewModel.getRandomProfile()
                                 likeToast(context)
                             }) {
