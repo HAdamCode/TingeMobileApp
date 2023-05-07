@@ -13,27 +13,30 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.tinge.data.TingePerson
 import com.example.tinge.presentation.navigation.specs.ChatScreenSpec
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TingeChatListScreen(tingeViewModel: ITingeViewModel, navController: NavHostController) {
-    val people = tingeViewModel.personListState.collectAsState().value
+fun TingeChatListScreen(tingeViewModel: ITingeViewModel, navController: NavHostController, people: List<TingePerson>) {
     Column() {
         people.forEach { person ->
             Card(
                 modifier = Modifier.padding(12.dp),
-                onClick = { navController.navigate(route = ChatScreenSpec.route) }) {
+                onClick = {
+                    tingeViewModel.getCurrentChatList(person)
+                    navController.navigate(route = ChatScreenSpec.route)
+                }) {
                 Row() {
-                    Image(
-                        painter = painterResource(
-                            id = person.imageId
-                        ),
-                        contentDescription = "",
-                        Modifier
-                            .size(90.dp)
-                    )
+//                    Image(
+//                        painter = painterResource(
+//                            id = person.imageId
+//                        ),
+//                        contentDescription = "",
+//                        Modifier
+//                            .size(90.dp)
+//                    )
                     Text(
                         text = person.firstName + ' ' + person.lastName, modifier = Modifier
                             .fillMaxWidth()

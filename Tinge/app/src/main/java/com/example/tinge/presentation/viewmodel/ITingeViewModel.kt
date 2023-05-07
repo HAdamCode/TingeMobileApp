@@ -1,5 +1,6 @@
 package com.example.tinge.presentation.viewmodel
 
+import com.example.tinge.data.TingeMessages
 import com.example.tinge.data.TingePerson
 import kotlinx.coroutines.flow.StateFlow
 import java.lang.Thread.State
@@ -10,6 +11,9 @@ interface ITingeViewModel {
     val currentPersonState: StateFlow<TingePerson?>
     val currentUserState: StateFlow<TingePerson?>
     val currentEditProfileState: StateFlow<TingePerson?>
+    val currentMessagesListState: StateFlow<List<TingeMessages>>
+    val chatListState: StateFlow<List<TingePerson>>
+    val currentPersonChatState: StateFlow<TingePerson?>
 
     fun addPerson(personToAdd: TingePerson)
 
@@ -18,6 +22,11 @@ interface ITingeViewModel {
     fun checkIfInDB(): Boolean
 
     fun getRandomProfile()
+
+    fun getCurrentChatList(person: TingePerson)
+    fun getChatPersonList()
+
+    fun sendMessage(message: TingeMessages)
 
     fun likePerson(personToLike: TingePerson)
 

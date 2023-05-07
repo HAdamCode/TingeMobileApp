@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -29,8 +30,9 @@ object ChatScreenSpec : IScreenSpec {
         coroutineScope: CoroutineScope,
         context: Context
     ) {
-        val person = tingeViewModel.currentPersonState.collectAsState()
-        person.value?.let { TingeChatScreen(it) }
+        val person = tingeViewModel.currentPersonChatState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+        val messages = tingeViewModel.currentMessagesListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+        person.value?.let { TingeChatScreen(it, messages.value, tingeViewModel) }
     }
 
     @Composable

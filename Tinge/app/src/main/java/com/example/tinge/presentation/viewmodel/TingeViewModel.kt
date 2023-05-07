@@ -2,9 +2,12 @@ package com.example.tinge.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.tinge.data.TingeMatches
+import com.example.tinge.data.TingeMessages
 import com.example.tinge.data.TingePerson
 import com.example.tinge.data.TingeRepo
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -45,6 +48,24 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 
     override val currentEditProfileState: StateFlow<TingePerson?>
         get() = mCurrentEditProfileState
+
+    private val mCurrentMessagesListState: MutableStateFlow<List<TingeMessages>> =
+        MutableStateFlow(emptyList())
+
+    override val currentMessagesListState: StateFlow<List<TingeMessages>>
+        get() = mCurrentMessagesListState
+
+    private val mChatListState: MutableStateFlow<List<TingePerson>> =
+        MutableStateFlow(emptyList())
+
+    override val chatListState: StateFlow<List<TingePerson>>
+        get() = mChatListState
+
+    private val mCurrentPersonChatState: MutableStateFlow<TingePerson?> =
+        MutableStateFlow(null)
+
+    override val currentPersonChatState: StateFlow<TingePerson?>
+        get() = mCurrentPersonChatState
 
     init {
         Log.d(LOG_TAG, "Characters do be adding")
@@ -220,6 +241,80 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
             .addOnFailureListener { exception ->
                 Log.w("TAG", "Error getting documents: ", exception)
             }
+    }
+
+    override fun getChatPersonList() {
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+        val db = Firebase.firestore
+        var collectionRef = db.collection("Matches")
+        mChatListState.value = emptyList()
+//        Log.d("Tinge View Model", userEmail.toString())
+        collectionRef.whereEqualTo("currentuser", userEmail.toString())
+            .get()
+            .addOnSuccessListener { documents ->
+//                Log.d("Tinge View Model", "getChatPersonList success")
+                for (document in documents) {
+                    val chat = document.toObject(TingeMatches::class.java)
+//                    Log.d("Tinge View Model", chat.currentuser)
+//                    Log.d("Tinge View Model", chat.liked.toString())
+                    if (chat.liked) {
+                        collectionRef = db.collection("TingePerson")
+                        collectionRef.whereEqualTo("email", chat.otheruser).get().addOnSuccessListener { documents ->
+//                            Log.d("Tinge View Model", "getChatPersonList success2")
+                            for (document in documents) {
+                                mChatListState.value += document.toObject(TingePerson::class.java)
+                                break
+                            }
+                        }
+                    }
+                    break
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("TAG", "Error getting documents: ", exception)
+            }
+    }
+
+    override fun getCurrentChatList(person: TingePerson) {
+        mCurrentPersonChatState.value = person
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+        val db = Firebase.firestore
+        val collectionRef = db.collection("Messages")
+        Log.d("Tinge View Model", userEmail.toString())
+        Log.d("Tinge View Model", person.email.toString())
+        mCurrentMessagesListState.value = emptyList()
+        collectionRef.whereEqualTo("sender", userEmail.toString())
+            .whereEqualTo("receiver", person.email)
+            .get()
+            .addOnSuccessListener { documents ->
+                Log.d("Tinge View Model", "Sucessssssss")
+                for (document in documents) {
+                    mCurrentMessagesListState.value += document.toObject(TingeMessages::class.java)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("TAG", "Error getting documents: ", exception)
+            }
+        collectionRef.whereEqualTo("sender", person.email)
+            .whereEqualTo("receiver", userEmail.toString())
+            .get()
+            .addOnSuccessListener { documents ->
+                Log.d("Tinge View Model", "Sucessssssss")
+                for (document in documents) {
+                    mCurrentMessagesListState.value += document.toObject(TingeMessages::class.java)
+                }
+                mCurrentMessagesListState.value = mCurrentMessagesListState.value.sortedBy { it.timestamp }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("TAG", "Error getting documents: ", exception)
+            }
+    }
+
+    override fun sendMessage(messages: TingeMessages) {
+        val db = Firebase.firestore
+        val collectionRef = db.collection("Messages")
+        val documentRef = collectionRef.document()
+        documentRef.set(messages)
     }
 
     override fun likePerson(characterToLike: TingePerson) {
