@@ -214,6 +214,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                     if (i == rand)
                         mCurrentPersonState.update { document.toObject(TingePerson::class.java) }
                     i++
+                    Log.d(LOG_TAG,document.toObject(TingePerson::class.java).toString())
                 }
             }
             .addOnFailureListener { exception ->
