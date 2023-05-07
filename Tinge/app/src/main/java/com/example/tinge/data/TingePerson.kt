@@ -8,7 +8,7 @@ data class TingePerson(
     val imageId: Bitmap?,
     var age: Int,
     val height: Int,
-    val gender: String,
+    val gender: String = "Male",
     val email: String?,
     val preference: String
 )

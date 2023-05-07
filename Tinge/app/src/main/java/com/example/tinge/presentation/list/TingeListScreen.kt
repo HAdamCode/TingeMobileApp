@@ -67,7 +67,6 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
         LaunchedEffect(key1 = Unit, block = {
             snapshotFlow { state.offset.value }
                 .collect {
-                    Log.d("TingeListScreen", it.toString())
                     willDismissDirection =
                         when {
                         it > 400f -> {
