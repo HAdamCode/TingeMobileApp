@@ -7,8 +7,9 @@ data class TingePerson(
     var age: Int,
     val height: Int,
     val gender: String,
-    val email: String?
+    val email: String?,
+    val preference: String
 )
 {
-    constructor() : this("", "", 0, 0, 0, "", "")
+    constructor() : this("", "", 0, 0, 0, "", "","")
 }

@@ -56,6 +56,7 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
     var inches by remember { mutableStateOf((person.height % 12).toString()) }
     var age by remember { mutableStateOf(person.age.toString()) }
     var gender by remember { mutableStateOf(person.gender) }
+    var preference by remember { mutableStateOf(person.preference) }
 
 //    val userEmail = FirebaseAuth.getInstance().currentUser?.email
 //    val db = Firebase.firestore
@@ -135,9 +136,14 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
             singleLine = true,
         )
         var genderItems = listOf("Male", "Female", "Non-Binary")
-        var expanded by remember { mutableStateOf(false) }
+        var expandedGender by remember { mutableStateOf(false) }
+        var expandedPreference by remember { mutableStateOf(false) }
         var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
-        val icon = if (expanded)
+        val icon = if (expandedGender)
+            Icons.Filled.KeyboardArrowUp
+        else
+            Icons.Filled.KeyboardArrowDown
+        val icon2 = if (expandedPreference)
             Icons.Filled.KeyboardArrowUp
         else
             Icons.Filled.KeyboardArrowDown
@@ -150,28 +156,43 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                         mTextFieldSize = coordinates.size.toSize()
                     }, trailingIcon = {
                     Icon(icon, "contentDescription",
-                        Modifier.clickable { expanded = !expanded })
+                        Modifier.clickable { expandedGender = !expandedGender })
                 },
                 readOnly = true
             )
-//            OutlinedTextField(value = gender, onValueChange = {gender = it},
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .onGloballyPositioned { coordinates ->
-//                    mTextFieldSize = coordinates.size.toSize()
-//                }, trailingIcon = {
-//                    Icon(icon, "contentDescription",
-//                        Modifier.clickable { expanded = !expanded })
-//                }
-//            )
             DropdownMenu(
-                expanded = expanded, onDismissRequest = { expanded = !expanded },
+                expanded = expandedGender, onDismissRequest = { expandedGender = !expandedGender },
                 modifier = Modifier.width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
             ) {
                 genderItems.forEach { genderItem ->
                     DropdownMenuItem(text = { Text(text = genderItem) }, onClick = {
                         gender = genderItem
-                        expanded = false
+                        expandedGender = false
+                    })
+                }
+            }
+        }
+        Column {
+            Text(text = "Preference:")
+            OutlinedTextField(value = preference, onValueChange = { preference = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned { coordinates ->
+                        mTextFieldSize = coordinates.size.toSize()
+                    }, trailingIcon = {
+                    Icon(icon2, "contentDescription",
+                        Modifier.clickable { expandedPreference = !expandedPreference })
+                },
+                readOnly = true
+            )
+            DropdownMenu(
+                expanded = expandedPreference, onDismissRequest = { expandedPreference = !expandedPreference },
+                modifier = Modifier.width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
+            ) {
+                genderItems.forEach { genderItem ->
+                    DropdownMenuItem(text = { Text(text = genderItem) }, onClick = {
+                        preference = genderItem
+                        expandedPreference = false
                     })
                 }
             }
@@ -192,7 +213,8 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                     age.toInt(),
                     (feet.toInt() * 12) + inches.toInt(),
                     gender,
-                    FirebaseAuth.getInstance().currentUser?.email
+                    FirebaseAuth.getInstance().currentUser?.email,
+                    preference
                 )
                 if (tingeViewModel.checkIfInDB()) {
                     Log.d("ProfileEditScreen", "Inside good one")

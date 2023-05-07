@@ -33,7 +33,8 @@ class TingeRepo private constructor(
                 age = 20,
                 height = 72,
                 gender = "Male",
-                email = ""
+                email = "",
+                preference = ""
             ),
             TingePerson(
                 imageId = R.drawable.monsters_university_character_randy_boggs_icon,
@@ -42,7 +43,8 @@ class TingeRepo private constructor(
                 age = 23,
                 height = 63,
                 gender = "Non-binary",
-                email = ""
+                email = "",
+                preference = ""
             )
         )
         persons = personsList

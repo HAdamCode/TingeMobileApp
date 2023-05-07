@@ -75,7 +75,8 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                         age = 0,
                         height = 0,
                         gender = "",
-                        email = userEmail
+                        email = userEmail,
+                        preference = ""
                     )
                     val documentRef = collectionRef.document()
                     documentRef.set(data)
@@ -127,7 +128,8 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
             age = 21,
             height = 63,
             gender = "Male",
-            email = userEmail
+            email = userEmail,
+            preference = "Non-Binary"
         )
         val documentRef = collectionRef.document()
         documentRef.set(data)
@@ -163,7 +165,8 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
             "imageId" to tingePerson.imageId,
             "age" to tingePerson.age,
             "height" to tingePerson.height,
-            "gender" to tingePerson.gender
+            "gender" to tingePerson.gender,
+            "preference" to tingePerson.preference
         )
         query.get().addOnSuccessListener { querySnapshot ->
             for (document in querySnapshot.documents) {
