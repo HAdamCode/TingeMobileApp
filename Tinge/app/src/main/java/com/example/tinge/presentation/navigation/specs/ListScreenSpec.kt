@@ -19,6 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.example.tinge.MainActivity
 import com.example.tinge.presentation.list.TingeListScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import com.example.tinge.R
@@ -36,7 +37,8 @@ object ListScreenSpec : IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry,
         coroutineScope: CoroutineScope,
-        context: Context
+        context: Context,
+        mainActivity: MainActivity
     ) {
 //        tingeViewModel.getRandomProfile()
         val personList = tingeViewModel.currentPersonState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)

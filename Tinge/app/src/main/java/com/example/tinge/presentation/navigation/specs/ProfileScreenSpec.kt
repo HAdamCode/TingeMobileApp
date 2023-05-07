@@ -17,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.example.tinge.MainActivity
 import com.example.tinge.R
 import com.example.tinge.presentation.profile.TingeProfileScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
@@ -34,10 +35,13 @@ object ProfileScreenSpec : IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry,
         coroutineScope: CoroutineScope,
-        context: Context
+        context: Context,
+        mainActivity: MainActivity
     ) {
         tingeViewModel.checkIfInDB()
         val person = tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+        val image = tingeViewModel.currentImageState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+
         person.value?.let { TingeProfileScreen(it) }
 
     }

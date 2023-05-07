@@ -1,7 +1,10 @@
 package com.example.tinge.presentation.viewmodel
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.tinge.R
 import com.example.tinge.data.TingeMatches
 import com.example.tinge.data.TingeMessages
 import com.example.tinge.data.TingePerson
@@ -67,6 +70,13 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
     override val currentPersonChatState: StateFlow<TingePerson?>
         get() = mCurrentPersonChatState
 
+
+
+    private val mCurrentImageState: MutableStateFlow<Bitmap?> =
+        MutableStateFlow(null)
+    override val currentImageState: StateFlow<Bitmap?>
+        get() = mCurrentImageState.asStateFlow()
+
     init {
         Log.d(LOG_TAG, "Characters do be adding")
 //        addPerson(tingeRepo.persons.first())
@@ -89,10 +99,11 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 //                }
                 Log.d("TingeViewModel", "Inside viewmodel for loop")
                 if (documents.documents.isEmpty()) {
+                    Log.d("TingeViewModel", "This happened 1")
                     val data = TingePerson(
                         firstName = "",
                         lastName = "",
-                        imageId = 0,
+                        imageId = null,
                         age = 0,
                         height = 0,
                         gender = "",
@@ -103,7 +114,21 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                     documentRef.set(data)
                 }
                 for (document in documents) {
-                    mCurrentUserState.update { document.toObject(TingePerson::class.java) }
+                    if(document.get("imageId") is Bitmap){
+                        Log.d(LOG_TAG, "This one happens")
+                        mCurrentUserState.update { document.toObject(TingePerson::class.java) }
+                    }else{
+                        val firstName = document.get("firstName").toString()
+                        val lastName = document.get("lastName").toString()
+                        val imageId = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                        val age = Integer.parseInt(document.get("age").toString())
+                        val height = Integer.parseInt(document.get("height").toString())
+                        val gender = document.get("gender").toString()
+                        val email = document.get("email").toString()
+                        val preference = document.get("preference").toString()
+                        val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference)
+                        mCurrentUserState.update { tempTingePerson }
+                    }
                 }
             }
             .addOnFailureListener { exception ->
@@ -131,6 +156,11 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 //        return
 //    }
 
+    override fun updateImage(imageToUpdate: Bitmap) {
+        Log.d(LOG_TAG, "Image Updated!")
+        mCurrentImageState.update { imageToUpdate }
+    }
+
     /**
      * Adds the given character to the list of characters.
      * @param characterToAdd character to add to the list
@@ -145,7 +175,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         val data = TingePerson(
             firstName = "Hunter",
             lastName = "Adam",
-            imageId = 123,
+            imageId = null,
             age = 21,
             height = 63,
             gender = "Male",
@@ -183,15 +213,16 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         val updates = mapOf<String, Any>(
             "firstName" to tingePerson.firstName,
             "lastName" to tingePerson.lastName,
-            "imageId" to tingePerson.imageId,
+            "imageId" to currentImageState,
             "age" to tingePerson.age,
             "height" to tingePerson.height,
             "gender" to tingePerson.gender,
             "preference" to tingePerson.preference
         )
+
         query.get().addOnSuccessListener { querySnapshot ->
             for (document in querySnapshot.documents) {
-                Log.d("TingeViewsssssModel", document.id)
+                Log.d("TingeViewsssssModel", document.get("firstName").toString())
                 collectionRef.document(document.id).update(updates)
             }
         }.addOnFailureListener { exception ->
@@ -208,7 +239,21 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         collectionRef.whereEqualTo("email", userEmail)
             .get()
             .addOnSuccessListener { querySnapshot ->
-                mCurrentUserState.value = querySnapshot.documents.first().toObject(TingePerson::class.java)
+                val document = querySnapshot.documents.first()
+                if(document.get("imageId") is Bitmap){
+                    mCurrentUserState.value = querySnapshot.documents.first().toObject(TingePerson::class.java)
+                }else{
+                    val firstName = document.get("firstName").toString()
+                    val lastName = document.get("lastName").toString()
+                    val imageId = null
+                    val age = Integer.parseInt(document.get("age").toString())
+                    val height = Integer.parseInt(document.get("height").toString())
+                    val gender = document.get("gender").toString()
+                    val email = document.get("email").toString()
+                    val preference = document.get("preference").toString()
+                    val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference)
+                    mCurrentUserState.value = tempTingePerson
+                }
             }
             .addOnFailureListener { exception ->
                 Log.w("TAG", "Error getting documents: ", exception)
@@ -232,8 +277,23 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 
                 for (document in documents) {
                     Log.d("TingeViewModel", "Got a document")
-                    if (i == rand)
-                        mCurrentPersonState.update { document.toObject(TingePerson::class.java) }
+                    if (i == rand){
+                        if(document.get("imageId") is Bitmap){
+                            mCurrentPersonState.update { document.toObject(TingePerson::class.java) }
+                        }else{
+                            val firstName = document.get("firstName").toString()
+                            val lastName = document.get("lastName").toString()
+                            val imageId = null
+                            val age = Integer.parseInt(document.get("age").toString())
+                            val height = Integer.parseInt(document.get("height").toString())
+                            val gender = document.get("gender").toString()
+                            val email = document.get("email").toString()
+                            val preference = document.get("preference").toString()
+                            val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference)
+                            mCurrentPersonState.update { tempTingePerson }
+                        }
+                    }
+
                     i++
                     Log.d(LOG_TAG,document.toObject(TingePerson::class.java).toString())
                 }

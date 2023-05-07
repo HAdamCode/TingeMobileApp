@@ -1,5 +1,6 @@
 package com.example.tinge.presentation.profile
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
@@ -7,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +28,9 @@ fun TingeProfileScreen(person: TingePerson) {
             .fillMaxHeight()
             .fillMaxWidth()
     ) {
+        if(person.imageId != null){
+            Image(person.imageId.asImageBitmap(), "image")
+        }
         Column(Modifier.padding(start = 4.dp, end = 4.dp)) {
             Text(
                 text = person.firstName + ' ' + person.lastName,
@@ -64,8 +69,8 @@ fun TingeProfileScreen(person: TingePerson) {
     }
 }
 
-@Preview
-@Composable
-fun PreviewTingeProfileScreen() {
-    TingeProfileScreen(person = TingeRepo.getInstance(LocalContext.current).persons.last())
-}
+//@Preview
+//@Composable
+//fun PreviewTingeProfileScreen() {
+//    TingeProfileScreen(person = TingeRepo.getInstance(LocalContext.current).persons.last())
+//}

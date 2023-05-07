@@ -1,11 +1,10 @@
 package com.example.tinge.presentation.profile
 
 import android.content.Context
-import android.graphics.drawable.Icon
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,18 +36,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavHostController
 import com.example.tinge.data.TingePerson
-import com.example.tinge.data.TingeRepo
 import com.example.tinge.presentation.navigation.specs.ListScreenSpec
 import com.example.tinge.presentation.navigation.specs.ProfileEditScreenSpec
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
-import com.example.tinge.presentation.viewmodel.TingeViewModel
 import com.google.firebase.auth.FirebaseAuth
 //import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlin.math.floor
 
 @Composable
-fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navController: NavHostController, context: Context) {
+fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navController: NavHostController, context: Context, onButton: () -> Unit) {
     var firstName by remember { mutableStateOf(person.firstName) }
     var lastName by remember { mutableStateOf(person.lastName) }
     var feet by remember { mutableStateOf(floor((person.height / 12.0)).toInt().toString()) }
@@ -57,6 +53,7 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
     var age by remember { mutableStateOf(person.age.toString()) }
     var gender by remember { mutableStateOf(person.gender) }
     var preference by remember { mutableStateOf(person.preference) }
+    var userImage by remember { mutableStateOf(person.imageId) }
 
 //    val userEmail = FirebaseAuth.getInstance().currentUser?.email
 //    val db = Firebase.firestore
@@ -82,6 +79,11 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
 //        }
     Log.d("Profile Edit", "Here")
     Column(modifier = Modifier.fillMaxSize()) {
+        Button(
+            onClick = onButton
+        ){
+            Text("Get Image")
+        }
         TextField(
             placeholder = { Text(text = person.firstName) },
             value = firstName,
@@ -197,6 +199,7 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                 }
             }
         }
+
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -209,7 +212,7 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                 val tingePerson = TingePerson(
                     firstName,
                     lastName,
-                    123,
+                    Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888),
                     age.toInt(),
                     (feet.toInt() * 12) + inches.toInt(),
                     gender,

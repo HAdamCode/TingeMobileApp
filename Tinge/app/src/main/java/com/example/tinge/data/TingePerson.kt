@@ -1,9 +1,11 @@
 package com.example.tinge.data
 
+import android.graphics.Bitmap
+
 data class TingePerson(
     val firstName: String,
     val lastName: String,
-    val imageId: Int,
+    val imageId: Bitmap?,
     var age: Int,
     val height: Int,
     val gender: String,
@@ -11,5 +13,5 @@ data class TingePerson(
     val preference: String
 )
 {
-    constructor() : this("", "", 0, 0, 0, "", "","")
+    constructor() : this("", "", null, 0, 0, "", "","")
 }

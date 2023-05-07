@@ -1,6 +1,7 @@
 package com.example.tinge.data
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import com.example.tinge.R
 
@@ -27,7 +28,7 @@ class TingeRepo private constructor(
         Log.d(LOG_TAG, "Initializing Repo List")
         val personsList = listOf(
             TingePerson(
-                imageId = R.drawable.cute_blue_monsters_university_icon,
+                imageId = null,
                 firstName = "Adam",
                 lastName = "Sandler",
                 age = 20,
@@ -37,7 +38,7 @@ class TingeRepo private constructor(
                 preference = ""
             ),
             TingePerson(
-                imageId = R.drawable.monsters_university_character_randy_boggs_icon,
+                imageId = null,
                 firstName = "Randy",
                 lastName = "Johnson",
                 age = 23,

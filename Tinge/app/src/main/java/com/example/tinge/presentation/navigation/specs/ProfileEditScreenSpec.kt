@@ -2,26 +2,22 @@ package com.example.tinge.presentation.navigation.specs
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.example.tinge.MainActivity
 import com.example.tinge.presentation.profile.ProfileEditScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 
-object ProfileEditScreenSpec : IScreenSpec {
+object ProfileEditScreenSpec : IScreenSpec, Fragment() {
     private const val LOG_TAG = "Tinge.ProfileEditScreenSpec"
     override val route = "profileEdit"
     override val arguments: List<NamedNavArgument> = emptyList()
@@ -34,13 +30,19 @@ object ProfileEditScreenSpec : IScreenSpec {
         navController: NavHostController,
         navBackStackEntry: NavBackStackEntry,
         coroutineScope: CoroutineScope,
-        context: Context
+        context: Context,
+        mainActivity: MainActivity
     ) {
+        fun launchImagePickerFromScreen(){
+            mainActivity.launchImagePicker()
+        }
+
         tingeViewModel.checkIfInDB()
         val person =
             tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 
-        person.value?.let { ProfileEditScreen(it, tingeViewModel, navController, context) }
+        person.value?.let { ProfileEditScreen(it, tingeViewModel, navController, context, { launchImagePickerFromScreen() })
+        }
     }
 
     @Composable

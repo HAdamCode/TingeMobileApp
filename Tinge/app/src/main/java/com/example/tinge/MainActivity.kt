@@ -1,10 +1,14 @@
 package com.example.tinge
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +27,7 @@ import com.example.tinge.presentation.viewmodel.TingeViewModelFactory
 import com.example.tinge.ui.theme.TingeTheme
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.rememberCoroutineScope
+import com.example.tinge.presentation.navigation.specs.ProfileEditScreenSpec
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -30,6 +35,8 @@ import com.google.firebase.auth.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import java.io.FileDescriptor
+import java.io.IOException
 
 // DO NOT DELETE PLEASE
 //    val db = Firebase.firestore
@@ -42,9 +49,37 @@ class MainActivity : AppCompatActivity() {
         private const val LOG_TAG = "448.MainActivity"
     }
 
+    fun uriToBitmap(selectedFileUri: Uri): Bitmap? {
+        try {
+            val parcelFileDescriptor = contentResolver.openFileDescriptor(selectedFileUri, "r")
+            val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
+            val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+            parcelFileDescriptor.close()
+            return image
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
     private lateinit var mTingeViewModel: ITingeViewModel
     private lateinit var auth: FirebaseAuth
     lateinit var storage: FirebaseStorage
+
+//    var imageUri : Uri? = null
+//    var bitmap: Bitmap? = null
+
+    val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        //hande URI here
+        //imageUri = uri
+        //bitmap = uriToBitmap(imageUri!!)
+        //uriToBitmap(uri!!)?.let { mTingeViewModel.updateImage(it) }
+        uriToBitmap(uri!!)?.let { mTingeViewModel.updateImage(it) }
+    }
+    fun launchImagePicker(){
+        Log.d(LOG_TAG, "Launch Image Picker Called")
+        pickImage.launch("image/")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +98,7 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             createSignInIntent(signInLauncher)
-            MainActivityContent(tingeViewModel = mTingeViewModel)
+            MainActivityContent(tingeViewModel = mTingeViewModel, this@MainActivity)
 //            val temp = FirebaseAuth.getInstance().currentUser?.email
 //            if (temp == null)
 //                Log.d(LOG_TAG, "null user")
@@ -74,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-private fun MainActivityContent(tingeViewModel: ITingeViewModel) {
+private fun MainActivityContent(tingeViewModel: ITingeViewModel, mainActivity: MainActivity) {
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -98,7 +133,8 @@ private fun MainActivityContent(tingeViewModel: ITingeViewModel) {
                     navController = navController,
                     context = context,
                     coroutineScope = coroutineScope,
-                    tingeViewModel = tingeViewModel
+                    tingeViewModel = tingeViewModel,
+                    mainActivity = mainActivity
                 )
             }
         }

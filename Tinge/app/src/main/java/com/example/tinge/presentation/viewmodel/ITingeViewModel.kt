@@ -1,6 +1,7 @@
 package com.example.tinge.presentation.viewmodel
 
 import com.example.tinge.data.TingeMessages
+import android.graphics.Bitmap
 import com.example.tinge.data.TingePerson
 import kotlinx.coroutines.flow.StateFlow
 import java.lang.Thread.State
@@ -14,6 +15,7 @@ interface ITingeViewModel {
     val currentMessagesListState: StateFlow<List<TingeMessages>>
     val chatListState: StateFlow<List<TingePerson>>
     val currentPersonChatState: StateFlow<TingePerson?>
+    val currentImageState : StateFlow<Bitmap?>
 
     fun addPerson(personToAdd: TingePerson)
 
@@ -33,4 +35,6 @@ interface ITingeViewModel {
     fun likePerson(personToLike: TingePerson)
 
     fun dislikePerson(personToDislike: TingePerson)
+
+    fun updateImage(imageToUpdate: Bitmap)
 }
