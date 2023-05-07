@@ -109,7 +109,10 @@ object ProfileScreenSpec : IScreenSpec {
                 )
             }
             //Should have button to navigate to chat
-            IconButton(onClick = { navController.navigate(route = ChatListScreenSpec.route) }) {
+            IconButton(onClick = {
+                tingeViewModel.getChatPersonList()
+                navController.navigate(route = ChatListScreenSpec.route)
+            }) {
                 Icon(
                     //PLACEHOLDER ICON
                     //imageVector = Icons.Filled.AddCircle,
