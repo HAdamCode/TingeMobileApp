@@ -34,9 +34,10 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun TingeChatScreen(
     person: TingePerson,
-    messages: List<TingeMessages>,
+    tingeMessages: List<TingeMessages>,
     tingeViewModel: ITingeViewModel
 ) {
+    val messages = tingeMessages.sortedBy { it.timestamp }
     var text by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
     Column(modifier = Modifier.fillMaxHeight(.91f)) {
