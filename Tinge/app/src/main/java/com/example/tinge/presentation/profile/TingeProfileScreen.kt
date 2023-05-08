@@ -25,13 +25,6 @@ import java.util.Base64
 @Composable
 fun TingeProfileScreen(person: TingePerson) {
     fun loadImageFromBase64(base64String: String): Bitmap? {
-//        // Convert the Base64 string to a byte array
-//        val decodedString = java.util.Base64.getDecoder().decode(base64String)
-//
-//        // Decode the byte array into a Bitmap
-//        val bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-//
-//        return bitmap
         try {
             Log.d("Decoding: ", base64String.length.toString())
             val decodedBytes = Base64.getDecoder().decode(base64String)

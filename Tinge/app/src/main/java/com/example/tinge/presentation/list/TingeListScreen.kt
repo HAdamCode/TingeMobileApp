@@ -1,8 +1,11 @@
 package com.example.tinge.presentation.list
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.DismissDirection
@@ -26,18 +29,31 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tinge.data.TingePerson
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
+import java.util.Base64
 import kotlin.math.floor
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
     Log.d("LISTSCREEN", person.email.toString())
+    fun loadImageFromBase64(base64String: String): Bitmap? {
+        try {
+            Log.d("Decoding: ", base64String.length.toString())
+            val decodedBytes = Base64.getDecoder().decode(base64String)
+            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        } catch (e: IllegalArgumentException) {
+            // Invalid Base64 string
+            e.printStackTrace()
+        }
+        return null
+    }
     val context = LocalContext.current
     val feet = floor(person.height / 12.0).toInt()
     val inches = person.height % 12
@@ -131,6 +147,13 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
 //                    .size(350.dp)
 //                    .fillMaxHeight()
 //            )
+                if(person.imageId != ""){
+                    val image = loadImageFromBase64(person.imageId)
+                    if(image != null){
+                        Image(image.asImageBitmap(), "image")
+                    }
+
+                }
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Row(
                         horizontalArrangement = Arrangement.Center,
