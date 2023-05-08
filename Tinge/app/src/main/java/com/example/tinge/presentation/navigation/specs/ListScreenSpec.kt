@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +24,7 @@ import com.example.tinge.R
 import com.example.tinge.presentation.list.TingeListScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 
 object ListScreenSpec : IScreenSpec {
     private const val LOG_TAG = "Tinge.ListScreenSpec"
@@ -46,7 +48,7 @@ object ListScreenSpec : IScreenSpec {
 
         val person = personList.value
         if (person != null) {
-            TingeListScreen(person = person, tingeViewModel)
+            TingeListScreen(person = person, tingeViewModel) { tingeViewModel.getRandomProfile() }
         } else {
             tingeViewModel.getRandomProfile()
         }

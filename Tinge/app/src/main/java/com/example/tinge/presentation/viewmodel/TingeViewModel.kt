@@ -1,6 +1,8 @@
 package com.example.tinge.presentation.viewmodel
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.example.tinge.data.TingeMatches
 import com.example.tinge.data.TingeMessages
@@ -84,13 +86,16 @@ class TingeViewModel(tingeRepo: TingeRepo) : ViewModel(), ITingeViewModel {
                     lat = 0.0,
                     lon = 0.0
                 )
+                mCurrentImageState.update { "" }
                 val documentRef = collectionRef.document()
                 documentRef.set(data)
             }
             for (document in documents) {
                 if (document.get("imageId") is String) {
                     Log.d(LOG_TAG, "This one happens")
-                    mCurrentUserState.update { document.toObject(TingePerson::class.java) }
+                    val tingePerson =  document.toObject(TingePerson::class.java)
+                    mCurrentUserState.update { tingePerson }
+                    mCurrentImageState.update { tingePerson.imageId }
                 } else {
                     val firstName = document.get("firstName").toString()
                     val lastName = document.get("lastName").toString()
@@ -158,7 +163,7 @@ class TingeViewModel(tingeRepo: TingeRepo) : ViewModel(), ITingeViewModel {
         val updates = mapOf<String, Any>(
             "firstName" to tingePerson.firstName,
             "lastName" to tingePerson.lastName,
-            "imageId" to image,
+            "imageId" to mCurrentImageState.value,
             "age" to tingePerson.age,
             "height" to tingePerson.height,
             "gender" to tingePerson.gender,

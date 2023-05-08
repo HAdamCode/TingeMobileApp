@@ -34,12 +34,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tinge.data.TingePerson
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
+import kotlinx.coroutines.delay
 import java.util.Base64
 import kotlin.math.floor
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
+fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel, rand: () -> Unit) {
     Log.d("LISTSCREEN", person.email.toString())
     fun loadImageFromBase64(base64String: String): Bitmap? {
         try {
@@ -68,11 +69,11 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
             confirmStateChange = {
                 if (willDismissDirection == DismissDirection.EndToStart) {
                     tingeViewModel.addMatch(person, true)
-                    tingeViewModel.getRandomProfile()
+                    rand()
                     likeToast(context)
                 } else if (willDismissDirection == DismissDirection.StartToEnd) {
                     tingeViewModel.addMatch(person, false)
-                    tingeViewModel.getRandomProfile()
+                    rand()
                     dislikeToast(context)
                 }
                 false
@@ -83,11 +84,11 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
                 .collect {
                     willDismissDirection =
                         when {
-                            it > 400f -> {
+                            it > 250f -> {
                                 DismissDirection.EndToStart
                             }
 
-                            it < -400f -> {
+                            it < -250f -> {
                                 DismissDirection.StartToEnd
                             }
 
