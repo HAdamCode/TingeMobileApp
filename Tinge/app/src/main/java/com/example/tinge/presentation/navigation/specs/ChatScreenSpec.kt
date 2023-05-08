@@ -16,6 +16,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.LocationUtility
 import com.example.tinge.MainActivity
+import com.example.tinge.NetworkConnectionUtil
 import com.example.tinge.presentation.chat.TingeChatScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -37,9 +38,10 @@ object ChatScreenSpec : IScreenSpec {
         locationUtility: LocationUtility,
         permissionLauncher: ActivityResultLauncher<Array<String>>
     ) {
+        val canSend = NetworkConnectionUtil.isNetworkAvailableAndConnected(context)
         val person = tingeViewModel.currentPersonChatState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
         val messages = tingeViewModel.currentMessagesListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
-        person.value?.let { TingeChatScreen(it, messages.value, tingeViewModel) }
+        person.value?.let { TingeChatScreen(it, messages.value, tingeViewModel, canSend) }
     }
 
     @Composable
@@ -60,8 +62,8 @@ object ChatScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        val name = tingeViewModel.currentPersonState.collectAsState().value?.firstName +
-                tingeViewModel.currentPersonState.collectAsState().value?.lastName
+        val name = tingeViewModel.currentPersonChatState.collectAsState().value?.firstName +
+                tingeViewModel.currentPersonChatState.collectAsState().value?.lastName
         TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
             {
                 Row() {

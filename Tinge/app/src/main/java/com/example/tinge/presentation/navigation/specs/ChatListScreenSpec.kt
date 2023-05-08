@@ -22,6 +22,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.LocationUtility
 import com.example.tinge.MainActivity
+import com.example.tinge.NetworkConnectionUtil
 import com.example.tinge.R
 import com.example.tinge.presentation.chat.TingeChatListScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
@@ -45,9 +46,9 @@ object ChatListScreenSpec : IScreenSpec {
         permissionLauncher: ActivityResultLauncher<Array<String>>
     ) {
         Log.d("Tinge View Model", "Tinge BADADADADAD")
-
+        val canSend = NetworkConnectionUtil.isNetworkAvailableAndConnected(context)
         val people = tingeViewModel.chatListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext).value
-        TingeChatListScreen(tingeViewModel, navController, people)
+        TingeChatListScreen(tingeViewModel, navController, people, canSend)
     }
 
     @Composable
