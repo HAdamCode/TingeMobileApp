@@ -13,6 +13,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.MainActivity
+import com.example.tinge.NetworkConnectionUtil
 import com.example.tinge.presentation.chat.TingeChatScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -32,9 +33,10 @@ object ChatScreenSpec : IScreenSpec {
         context: Context,
         mainActivity: MainActivity
     ) {
+        val canSend = NetworkConnectionUtil.isNetworkAvailableAndConnected(context)
         val person = tingeViewModel.currentPersonChatState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
         val messages = tingeViewModel.currentMessagesListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
-        person.value?.let { TingeChatScreen(it, messages.value, tingeViewModel) }
+        person.value?.let { TingeChatScreen(it, messages.value, tingeViewModel, canSend) }
     }
 
     @Composable

@@ -19,11 +19,12 @@ import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TingeChatListScreen(tingeViewModel: ITingeViewModel, navController: NavHostController, people: List<TingePerson>) {
+fun TingeChatListScreen(tingeViewModel: ITingeViewModel, navController: NavHostController, people: List<TingePerson>, canSend: Boolean) {
     Column() {
         people.forEach { person ->
             Card(
                 modifier = Modifier.padding(12.dp),
+                enabled = canSend,
                 onClick = {
                     tingeViewModel.getCurrentChatList(person)
                     navController.navigate(route = ChatScreenSpec.route)

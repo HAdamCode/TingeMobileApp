@@ -35,7 +35,8 @@ import com.google.firebase.auth.FirebaseAuth
 fun TingeChatScreen(
     person: TingePerson,
     tingeMessages: List<TingeMessages>,
-    tingeViewModel: ITingeViewModel
+    tingeViewModel: ITingeViewModel,
+    canSend: Boolean
 ) {
     val messages = tingeMessages.sortedBy { it.timestamp }
     var text by remember { mutableStateOf("") }
@@ -92,7 +93,9 @@ fun TingeChatScreen(
             .fillMaxHeight()
             .wrapContentHeight(Alignment.Bottom)
     ) {
-        Column(modifier = Modifier.fillMaxWidth(.75f).padding(end = 5.dp)) {
+        Column(modifier = Modifier
+            .fillMaxWidth(.75f)
+            .padding(end = 5.dp)) {
             TextField(
                 value = text,
                 onValueChange = { text = it },
@@ -112,17 +115,19 @@ fun TingeChatScreen(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        Button(onClick = {
-            val userEmail = FirebaseAuth.getInstance().currentUser?.email
-            val message: TingeMessages
-            if (userEmail != null && person.email != null && text != "") {
-                message = TingeMessages(userEmail, person.email, text, Timestamp.now())
-                tingeViewModel.sendMessage(message)
-            }
-            tingeViewModel.getCurrentChatList(person)
-            focusManager.clearFocus()
-            text = ""
-        }) {
+        Button(
+            enabled = canSend,
+            onClick = {
+                val userEmail = FirebaseAuth.getInstance().currentUser?.email
+                val message: TingeMessages
+                if (userEmail != null && person.email != null && text != "") {
+                    message = TingeMessages(userEmail, person.email, text, Timestamp.now())
+                    tingeViewModel.sendMessage(message)
+                }
+                tingeViewModel.getCurrentChatList(person)
+                focusManager.clearFocus()
+                text = ""
+            }) {
             Text(text = "Send")
         }
     }
