@@ -2,6 +2,7 @@ package com.example.tinge.presentation.navigation.specs
 
 import android.content.Context
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.example.tinge.LocationUtility
 import com.example.tinge.MainActivity
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -142,6 +144,8 @@ sealed interface IScreenSpec {
         navBackStackEntry: NavBackStackEntry,
         coroutineScope: CoroutineScope,
         context: Context,
-        mainActivity: MainActivity
+        mainActivity: MainActivity,
+        locationUtility: LocationUtility,
+        permissionLauncher: ActivityResultLauncher<Array<String>>
     )
 }

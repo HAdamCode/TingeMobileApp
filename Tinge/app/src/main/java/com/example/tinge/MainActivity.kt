@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,11 +27,14 @@ import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import com.example.tinge.presentation.viewmodel.TingeViewModelFactory
 import com.example.tinge.ui.theme.TingeTheme
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tinge.presentation.navigation.specs.ProfileEditScreenSpec
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.android.gms.location.LocationSettingsStates
 import com.google.firebase.auth.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -48,6 +52,10 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val LOG_TAG = "448.MainActivity"
     }
+
+    private lateinit var locationUtility: LocationUtility
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var locationLauncher: ActivityResultLauncher<IntentSenderRequest>
 
     fun uriToBitmap(selectedFileUri: Uri): Bitmap? {
         try {
@@ -84,7 +92,25 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(LOG_TAG, "onCreate() called")
+        locationUtility = LocationUtility(this)
 
+
+
+        permissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+                // process if permissions were granted.
+                locationUtility.checkPermissionAndGetLocation(this@MainActivity, permissionLauncher = permissionLauncher)
+            }
+        locationLauncher = registerForActivityResult(
+            ActivityResultContracts.StartIntentSenderForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.let { data ->
+                    val states = LocationSettingsStates.fromIntent(data)
+                    locationUtility.verifyLocationSettingsStates(states)
+                }
+            }
+        }
         val factory = TingeViewModelFactory(this)
         mTingeViewModel = ViewModelProvider(this, factory)[factory.getViewModelClass()]
 
@@ -95,21 +121,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         storage = Firebase.storage
-
+        createSignInIntent(signInLauncher)
         setContent {
-            createSignInIntent(signInLauncher)
-            MainActivityContent(tingeViewModel = mTingeViewModel, this@MainActivity)
-//            val temp = FirebaseAuth.getInstance().currentUser?.email
-//            if (temp == null)
-//                Log.d(LOG_TAG, "null user")
-//            else
-//                Log.d(LOG_TAG, temp)
+            val locationState = locationUtility.currentLocationStateFlow.collectAsStateWithLifecycle(lifecycle = this@MainActivity.lifecycle)
+            val addressState = locationUtility.currentAddressStateFlow.collectAsStateWithLifecycle(lifecycle = this@MainActivity.lifecycle)
+            val isLocationAvailable = locationUtility.currentIsLocationAvailableFlow.collectAsStateWithLifecycle(lifecycle = this@MainActivity.lifecycle)
+            LaunchedEffect(locationState.value) {
+                locationUtility.getAddress(locationState.value)
+            }
+            MainActivityContent(tingeViewModel = mTingeViewModel, this@MainActivity,locationUtility,permissionLauncher)
         }
     }
 }
 
 @Composable
-private fun MainActivityContent(tingeViewModel: ITingeViewModel, mainActivity: MainActivity) {
+private fun MainActivityContent(tingeViewModel: ITingeViewModel, mainActivity: MainActivity,locationUtility: LocationUtility,
+                                permissionLauncher: ActivityResultLauncher<Array<String>>) {
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -134,7 +161,9 @@ private fun MainActivityContent(tingeViewModel: ITingeViewModel, mainActivity: M
                     context = context,
                     coroutineScope = coroutineScope,
                     tingeViewModel = tingeViewModel,
-                    mainActivity = mainActivity
+                    mainActivity = mainActivity,
+                    locationUtility = locationUtility,
+                    permissionLauncher = permissionLauncher
                 )
             }
         }

@@ -2,11 +2,13 @@ package com.example.tinge.presentation.navigation.specs
 
 import android.content.Context
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,6 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
+import com.example.tinge.LocationUtility
 import com.example.tinge.MainActivity
 import com.example.tinge.R
 import com.example.tinge.presentation.chat.TingeChatListScreen
@@ -37,7 +40,9 @@ object ChatListScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry,
         coroutineScope: CoroutineScope,
         context: Context,
-        mainActivity: MainActivity
+        mainActivity: MainActivity,
+        locationUtility: LocationUtility,
+        permissionLauncher: ActivityResultLauncher<Array<String>>
     ) {
         Log.d("Tinge View Model", "Tinge BADADADADAD")
 
@@ -56,7 +61,7 @@ object ChatListScreenSpec : IScreenSpec {
         IconButton(onClick = { navController.navigate(route = SettingsScreenSpec.route) }) {
             Icon(
                 //PLACEHOLDER ICON
-                imageVector = Icons.Filled.AddCircle,
+                imageVector = Icons.Filled.Settings,
                 contentDescription = "Settings Desc Placeholder!"
             )
         }

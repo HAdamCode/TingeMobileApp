@@ -1,12 +1,14 @@
 package com.example.tinge.presentation.navigation
 
 import android.content.Context
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.tinge.LocationUtility
 import com.example.tinge.MainActivity
 import com.example.tinge.presentation.navigation.specs.IScreenSpec
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
@@ -20,7 +22,9 @@ fun TingeNavHost(
     tingeViewModel: ITingeViewModel,
     coroutineScope: CoroutineScope,
     context: Context,
-    mainActivity: MainActivity
+    mainActivity: MainActivity,
+    locationUtility: LocationUtility,
+    permissionLauncher: ActivityResultLauncher<Array<String>>
 ) {
     NavHost(
         modifier = modifier,
@@ -43,7 +47,9 @@ fun TingeNavHost(
                             navBackStackEntry = navBackStackEntry,
                             coroutineScope = coroutineScope,
                             context = context,
-                            mainActivity = mainActivity
+                            mainActivity = mainActivity,
+                            locationUtility = locationUtility,
+                            permissionLauncher = permissionLauncher
                         )
                     }
                 }
