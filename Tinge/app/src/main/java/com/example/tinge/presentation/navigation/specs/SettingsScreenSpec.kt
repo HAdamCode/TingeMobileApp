@@ -37,28 +37,33 @@ object SettingsScreenSpec : IScreenSpec {
         locationUtility: LocationUtility,
         permissionLauncher: ActivityResultLauncher<Array<String>>
     ) {
-        val person =
-            tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
-        val locationState =
-            locationUtility.currentLocationStateFlow.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+        tingeViewModel.checkIfInDB()
+        val locationState = locationUtility
+            .currentLocationStateFlow
+            .collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 
-        LaunchedEffect(locationState.value) {
+        val tingePerson = tingeViewModel
+            .currentUserState
+            .collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+
+        LaunchedEffect(locationState.value, tingePerson.value) {
             val location = locationState.value
-            val people = person.value
-            if (location != null && people != null) {
-                val tingePerson = TingePerson(
-                    people.firstName,
-                    people.lastName,
-                    people.imageId,
-                    people.age,
-                    people.height,
-                    people.gender,
-                    people.email,
-                    people.preference,
+            val person = tingePerson.value
+            if (location != null && person != null) {
+                val tPerson = TingePerson(
+                    person.firstName,
+                    person.lastName,
+                    person.imageId,
+                    person.age,
+                    person.height,
+                    person.gender,
+                    person.email,
+                    person.preference,
                     location.latitude,
                     location.longitude
                 )
-                tingeViewModel.updatePerson(tingePerson, people.imageId)
+                tingeViewModel.updatePerson(tPerson, person.imageId)
+                tingeViewModel.checkIfInDB()
             }
         }
 
@@ -66,9 +71,10 @@ object SettingsScreenSpec : IScreenSpec {
             locationUtility,
             mainActivity,
             permissionLauncher,
-            person.value,
             tingeViewModel,
-            coroutineScope
+            coroutineScope,
+            tingePerson.value,
+            navController
         )
     }
 
@@ -79,12 +85,6 @@ object SettingsScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        IconButton(onClick = { navController.navigate(route = route) }) {
-            Icon(
-                imageVector = Icons.Filled.Settings,
-                contentDescription = "Settings Desc Placeholder!"
-            )
-        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)

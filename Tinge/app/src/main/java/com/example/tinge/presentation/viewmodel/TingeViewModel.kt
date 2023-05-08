@@ -200,7 +200,7 @@ class TingeViewModel(tingeRepo: TingeRepo) : ViewModel(), ITingeViewModel {
                     var lon = document.getDouble("lon")
                     if (lat == null) lat = 0.0
                     if (lon == null) lon = 0.0
-                    val tempTingePerson: TingePerson = TingePerson(
+                    val tempTingePerson = TingePerson(
                         firstName,
                         lastName,
                         imageId,
@@ -216,7 +216,6 @@ class TingeViewModel(tingeRepo: TingeRepo) : ViewModel(), ITingeViewModel {
                 }
             } else {
                 mCurrentUserState.value = TingePerson(email = userEmail)
-                Log.d("TingeViewModel", "This happened 1")
                 val documentRef = collectionRef.document()
                 documentRef.set(TingePerson(email = userEmail))
 

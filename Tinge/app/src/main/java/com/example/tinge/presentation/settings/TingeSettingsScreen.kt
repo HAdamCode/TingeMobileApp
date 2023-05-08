@@ -8,13 +8,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.example.tinge.LocationUtility
 import com.example.tinge.MainActivity
 import com.example.tinge.data.TingePerson
+import com.example.tinge.presentation.navigation.specs.ChatScreenSpec
+import com.example.tinge.presentation.navigation.specs.SettingsScreenSpec
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -23,43 +24,18 @@ fun TingeSettingsScreen(
     locationUtility: LocationUtility,
     mainActivity: MainActivity,
     permissionLauncher: ActivityResultLauncher<Array<String>>,
-    person: TingePerson?,
     tingeViewModel: ITingeViewModel,
     coroutineScope: CoroutineScope,
+    tingePerson: TingePerson?,
+    navController: NavHostController
 ) {
-    tingeViewModel.checkIfInDB()
-    val locationState = locationUtility
-        .currentLocationStateFlow
-        .collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 
-    val tingePerson = tingeViewModel
-        .currentUserState
-        .collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
-
-    LaunchedEffect(locationState.value, tingePerson.value) {
-        val location = locationState.value
-        val person = tingePerson.value
-        if (location != null && person != null) {
-            val tingePerson = TingePerson(
-                person.firstName,
-                person.lastName,
-                person.imageId,
-                person.age,
-                person.height,
-                person.gender,
-                person.email,
-                person.preference,
-                location.latitude,
-                location.longitude
-            )
-            tingeViewModel.updatePerson(tingePerson, person.imageId)
-            tingeViewModel.checkIfInDB()
-        }
-    }
     Column {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp)
+        ) {
             Text(
                 text = "Update to current Location: ",
                 modifier = Modifier
@@ -75,20 +51,22 @@ fun TingeSettingsScreen(
                 Text(text = "Get Location")
             }
         }
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp)) {
-            Text(text = "latitude", modifier = Modifier.fillMaxWidth(.5f))
-            if (person != null) {
-                Text(text = person.lat.toString(), modifier = Modifier.fillMaxWidth())
+        if (tingePerson != null) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp)
+            ) {
+                Text(text = "latitude", modifier = Modifier.fillMaxWidth(.5f))
+                Text(text = tingePerson.lat.toString(), modifier = Modifier.fillMaxWidth())
             }
-        }
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp)) {
-            Text(text = "longitude", modifier = Modifier.fillMaxWidth(.5f))
-            if (person != null) {
-                Text(text = person.lon.toString(), modifier = Modifier.fillMaxWidth())
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(15.dp)
+            ) {
+                Text(text = "longitude", modifier = Modifier.fillMaxWidth(.5f))
+                Text(text = tingePerson.lon.toString(), modifier = Modifier.fillMaxWidth())
             }
         }
     }
