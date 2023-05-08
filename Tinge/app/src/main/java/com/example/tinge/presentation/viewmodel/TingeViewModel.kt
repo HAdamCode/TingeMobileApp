@@ -252,26 +252,43 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         collectionRef.whereEqualTo("email", userEmail)
             .get()
             .addOnSuccessListener { querySnapshot ->
-                val document = querySnapshot.documents.first()
-                if(document.get("imageId") is String){
-                    mCurrentUserState.value = querySnapshot.documents.first().toObject(TingePerson::class.java)
-                }else{
-                    val firstName = document.get("firstName").toString()
-                    val lastName = document.get("lastName").toString()
-                    val imageId = ""
-                    val age = Integer.parseInt(document.get("age").toString())
-                    val height = Integer.parseInt(document.get("height").toString())
-                    val gender = document.get("gender").toString()
-                    val email = document.get("email").toString()
-                    val preference = document.get("preference").toString()
-                    var lat = document.getDouble("lat")
-                    var lon = document.getDouble("lon")
-                    if (lat == null)
-                        lat = 0.0
-                    if (lon == null)
-                        lon = 0.0
-                    val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference,lat,lon)
-                    mCurrentUserState.value = tempTingePerson
+                if (querySnapshot.documents.size != 0) {
+                    val document = querySnapshot.documents.first()
+                    if (document.get("imageId") is String) {
+                        mCurrentUserState.value =
+                            querySnapshot.documents.first().toObject(TingePerson::class.java)
+                    } else {
+                        val firstName = document.get("firstName").toString()
+                        val lastName = document.get("lastName").toString()
+                        val imageId = ""
+                        val age = Integer.parseInt(document.get("age").toString())
+                        val height = Integer.parseInt(document.get("height").toString())
+                        val gender = document.get("gender").toString()
+                        val email = document.get("email").toString()
+                        val preference = document.get("preference").toString()
+                        var lat = document.getDouble("lat")
+                        var lon = document.getDouble("lon")
+                        if (lat == null)
+                            lat = 0.0
+                        if (lon == null)
+                            lon = 0.0
+                        val tempTingePerson: TingePerson = TingePerson(
+                            firstName,
+                            lastName,
+                            imageId,
+                            age,
+                            height,
+                            gender,
+                            email,
+                            preference,
+                            lat,
+                            lon
+                        )
+                        mCurrentUserState.value = tempTingePerson
+                    }
+                }
+                else {
+                    mCurrentUserState.value = TingePerson(email = userEmail)
                 }
             }
             .addOnFailureListener { exception ->

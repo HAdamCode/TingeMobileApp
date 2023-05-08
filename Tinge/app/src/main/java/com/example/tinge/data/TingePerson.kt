@@ -16,4 +16,5 @@ data class TingePerson(
 )
 {
     constructor() : this("", "", "", 0, 0, "", "","",0.0,0.0)
+    constructor(email: String?) : this("", "", "", 0, 0, "", email,"",0.0,0.0)
 }

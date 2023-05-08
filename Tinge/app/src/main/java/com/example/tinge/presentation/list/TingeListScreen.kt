@@ -147,12 +147,17 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
 //                    .size(350.dp)
 //                    .fillMaxHeight()
 //            )
-                if(person.imageId != ""){
-                    val image = loadImageFromBase64(person.imageId)
-                    if(image != null){
-                        Image(image.asImageBitmap(), "image")
-                    }
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ){
+                    if(person.imageId != ""){
+                        val image = loadImageFromBase64(person.imageId)
+                        if(image != null){
+                            Image(image.asImageBitmap(), "image")
+                        }
 
+                    }
                 }
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Row(

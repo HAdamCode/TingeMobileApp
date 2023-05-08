@@ -9,6 +9,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -44,13 +45,6 @@ fun TingeProfileScreen(person: TingePerson) {
             .fillMaxWidth()
     ) {
         Log.d("ProfileScreen", person.imageId.length.toString())
-        if(person.imageId != ""){
-            val image = loadImageFromBase64(person.imageId)
-            if(image != null){
-                Image(image.asImageBitmap(), "image")
-            }
-
-        }
         Column(Modifier.padding(start = 4.dp, end = 4.dp)) {
             Text(
                 text = person.firstName + ' ' + person.lastName,
@@ -74,6 +68,19 @@ fun TingeProfileScreen(person: TingePerson) {
                     color = MaterialTheme.colorScheme.primary
                 )
             }
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                if(person.imageId != ""){
+                    val image = loadImageFromBase64(person.imageId)
+                    if(image != null){
+                        Image(image.asImageBitmap(), "image")
+                    }
+
+                }
+            }
+
 //            Image(
 //                painter = painterResource(
 //                    id =

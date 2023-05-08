@@ -2,14 +2,18 @@ package com.example.tinge.presentation.profile
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -28,6 +32,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,6 +47,7 @@ import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import com.google.firebase.auth.FirebaseAuth
 //import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.Base64
 import kotlin.math.floor
 
 @Composable
@@ -54,6 +60,18 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
     var gender by remember { mutableStateOf(person.gender) }
     var preference by remember { mutableStateOf(person.preference) }
     var userImage by remember { mutableStateOf(person.imageId) }
+
+    fun loadImageFromBase64(base64String: String): Bitmap? {
+        try {
+            Log.d("Decoding: ", base64String.length.toString())
+            val decodedBytes = Base64.getDecoder().decode(base64String)
+            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        } catch (e: IllegalArgumentException) {
+            // Invalid Base64 string
+            e.printStackTrace()
+        }
+        return null
+    }
 
 //    val userEmail = FirebaseAuth.getInstance().currentUser?.email
 //    val db = Firebase.firestore
@@ -79,6 +97,18 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
 //        }
     Log.d("Profile Edit", "Here")
     Column(modifier = Modifier.fillMaxSize()) {
+        Text("Current Profile Image: ")
+        if(person.imageId != ""){
+            val image = loadImageFromBase64(person.imageId)
+            if(image != null){
+                Image(
+                    image.asImageBitmap(),
+                    "image",
+                    modifier = Modifier.size(100.dp)
+                )
+            }
+
+        }
         Button(
             onClick = onButton
         ){

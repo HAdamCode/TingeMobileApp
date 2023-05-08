@@ -57,7 +57,11 @@ fun TingeChatListScreen(tingeViewModel: ITingeViewModel, navController: NavHostC
                     if(person.imageId != ""){
                         val image = loadImageFromBase64(person.imageId)
                         if(image != null){
-                            Image(image.asImageBitmap(), "image")
+                            Image(
+                                image.asImageBitmap(),
+                                "image",
+                                modifier = Modifier.size(100.dp)
+                            )
                         }
 
                     }
