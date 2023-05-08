@@ -40,6 +40,7 @@ import com.google.firebase.auth.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
 import java.io.IOException
 import java.nio.charset.Charset
@@ -62,13 +63,35 @@ class MainActivity : AppCompatActivity() {
     fun uriToBitmap(selectedFileUri: Uri): String {
         try {
             // use the new bitmap instead of the decoded bitmap
+//            val inputStream = contentResolver.openInputStream(selectedFileUri)
+//            val imageBytes = inputStream?.readBytes()
+//            inputStream?.close()
+//
+//            val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
+//            Log.d("Encoded Length:", base64Image.length.toString())
+//            return base64Image
+            val MAX_IMAGE_SIZE = 1200
             val inputStream = contentResolver.openInputStream(selectedFileUri)
-            val imageBytes = inputStream?.readBytes()
-            inputStream?.close()
+            val options = BitmapFactory.Options()
+            options.inJustDecodeBounds = true
+            BitmapFactory.decodeStream(inputStream, null, options)
+            inputStream!!.close()
 
-            val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
-            Log.d("Encoded Length:", base64Image.length.toString())
-            return base64Image
+            var ratio = 1
+            if (options.outHeight > MAX_IMAGE_SIZE || options.outWidth > MAX_IMAGE_SIZE) {
+                val heightRatio = Math.round(options.outHeight.toFloat() / MAX_IMAGE_SIZE.toFloat())
+                val widthRatio = Math.round(options.outWidth.toFloat() / MAX_IMAGE_SIZE.toFloat())
+                ratio = if (heightRatio < widthRatio) heightRatio else widthRatio
+            }
+
+            val compressedOptions = BitmapFactory.Options()
+            compressedOptions.inSampleSize = ratio
+            compressedOptions.inPreferredConfig = Bitmap.Config.RGB_565
+            val compressedImage = BitmapFactory.decodeStream(contentResolver.openInputStream(selectedFileUri), null, compressedOptions)
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            compressedImage!!.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream)
+            val byteArray = byteArrayOutputStream.toByteArray()
+            return Base64.encodeToString(byteArray, Base64.NO_WRAP)
         } catch (e: IOException) {
             e.printStackTrace()
         }
