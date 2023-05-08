@@ -230,7 +230,9 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
             "age" to tingePerson.age,
             "height" to tingePerson.height,
             "gender" to tingePerson.gender,
-            "preference" to tingePerson.preference
+            "preference" to tingePerson.preference,
+            "lat" to tingePerson.lat,
+            "lon" to tingePerson.lon
         )
 
         query.get().addOnSuccessListener { querySnapshot ->
