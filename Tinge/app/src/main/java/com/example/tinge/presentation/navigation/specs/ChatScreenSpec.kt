@@ -62,8 +62,8 @@ object ChatScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        val name = tingeViewModel.currentPersonState.collectAsState().value?.firstName +
-                tingeViewModel.currentPersonState.collectAsState().value?.lastName
+        val name = tingeViewModel.currentPersonChatState.collectAsState().value?.firstName +
+                tingeViewModel.currentPersonChatState.collectAsState().value?.lastName
         TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
             {
                 Row() {
