@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,10 +42,10 @@ object ProfileScreenSpec : IScreenSpec {
         permissionLauncher: ActivityResultLauncher<Array<String>>
     ) {
         tingeViewModel.checkIfInDB()
-        val person = tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
-        val image = tingeViewModel.currentImageState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+        val person =
+            tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 
-        person.value?.let { TingeProfileScreen(it)}
+        person.value?.let { TingeProfileScreen(it) }
 
     }
 
@@ -59,15 +58,11 @@ object ProfileScreenSpec : IScreenSpec {
     ) {
         IconButton(onClick = { navController.navigate(route = ProfileEditScreenSpec.route) }) {
             Icon(
-                //PLACEHOLDER ICON
-                imageVector = Icons.Filled.Edit,
-                contentDescription = "Edit Personal Profile"
+                imageVector = Icons.Filled.Edit, contentDescription = "Edit Personal Profile"
             )
         }
-        //Should have button to navigate to settings
         IconButton(onClick = { navController.navigate(route = SettingsScreenSpec.route) }) {
             Icon(
-                //PLACEHOLDER ICON
                 imageVector = Icons.Filled.Settings,
                 contentDescription = "Settings Desc Placeholder!"
             )
@@ -82,15 +77,14 @@ object ProfileScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        TopAppBar(title = { Text("Your Profile") },
-            actions = {
-                ProfileScreenSpec.TopAppBarActions(
-                    tingeViewModel = tingeViewModel,
-                    navController = navController,
-                    navBackStackEntry = navBackStackEntry,
-                    context = context
-                )
-            })
+        TopAppBar(title = { Text("Your Profile") }, actions = {
+            TopAppBarActions(
+                tingeViewModel = tingeViewModel,
+                navController = navController,
+                navBackStackEntry = navBackStackEntry,
+                context = context
+            )
+        })
     }
 
     @Composable
@@ -103,37 +97,27 @@ object ProfileScreenSpec : IScreenSpec {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
-            //Should have button to navigate to list
             IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
                 Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.Call,
                     painter = painterResource(R.drawable.explore),
                     contentDescription = "List Desc Placeholder!",
                     tint = Color(255, 121, 0)
                 )
             }
-            //Should have button to navigate to chat
             IconButton(onClick = {
                 tingeViewModel.getChatPersonList()
                 navController.navigate(route = ChatListScreenSpec.route)
             }) {
                 Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.AddCircle,
                     painter = painterResource(R.drawable.chaticon),
                     contentDescription = "Chat Desc Placeholder!",
                     tint = Color(25, 121, 100)
                 )
             }
-            //Should have button to navigate to profile
             IconButton(onClick = { }) {
                 Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.AccountBox,
                     painter = painterResource(R.drawable.profile),
                     contentDescription = "Profile Desc Placeholder!",
                     tint = Color(55, 10, 100)

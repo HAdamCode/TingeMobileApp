@@ -4,9 +4,7 @@ import android.content.Context
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,8 +37,10 @@ object ChatScreenSpec : IScreenSpec {
         permissionLauncher: ActivityResultLauncher<Array<String>>
     ) {
         val canSend = NetworkConnectionUtil.isNetworkAvailableAndConnected(context)
-        val person = tingeViewModel.currentPersonChatState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
-        val messages = tingeViewModel.currentMessagesListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+        val person =
+            tingeViewModel.currentPersonChatState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+        val messages =
+            tingeViewModel.currentMessagesListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
         person.value?.let { TingeChatScreen(it, messages.value, tingeViewModel, canSend) }
     }
 
@@ -62,11 +62,11 @@ object ChatScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        val name = tingeViewModel.currentPersonChatState.collectAsState().value?.firstName +
-                tingeViewModel.currentPersonChatState.collectAsState().value?.lastName
+        val name =
+            tingeViewModel.currentPersonChatState.collectAsState().value?.firstName + tingeViewModel.currentPersonChatState.collectAsState().value?.lastName
         TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
             {
-                Row() {
+                Row {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -77,15 +77,14 @@ object ChatScreenSpec : IScreenSpec {
             }
         } else {
             { }
-        }, title = { Text("Chat With: $name") },
-            actions = {
-                ChatScreenSpec.TopAppBarActions(
-                    tingeViewModel = tingeViewModel,
-                    navController = navController,
-                    navBackStackEntry = navBackStackEntry,
-                    context = context
-                )
-            })
+        }, title = { Text("Chat With: $name") }, actions = {
+            TopAppBarActions(
+                tingeViewModel = tingeViewModel,
+                navController = navController,
+                navBackStackEntry = navBackStackEntry,
+                context = context
+            )
+        })
     }
 
     @Composable

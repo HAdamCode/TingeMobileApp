@@ -27,19 +27,15 @@ fun TingeNavHost(
     permissionLauncher: ActivityResultLauncher<Array<String>>
 ) {
     NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = IScreenSpec.root
+        modifier = modifier, navController = navController, startDestination = IScreenSpec.root
     ) {
         navigation(
-            route = IScreenSpec.root,
-            startDestination = IScreenSpec.startDestination
+            route = IScreenSpec.root, startDestination = IScreenSpec.startDestination
         ) {
             IScreenSpec.allScreens.forEach { (_, screen) ->
                 if (screen != null) {
                     composable(
-                        route = screen.route,
-                        arguments = screen.arguments
+                        route = screen.route, arguments = screen.arguments
                     ) { navBackStackEntry ->
                         screen.Content(
                             tingeViewModel = tingeViewModel,

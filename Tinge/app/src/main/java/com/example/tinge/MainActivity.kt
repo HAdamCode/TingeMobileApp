@@ -11,15 +11,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.example.tinge.presentation.navigation.TingeBottomBar
 import com.example.tinge.presentation.navigation.TingeNavHost
@@ -27,30 +31,18 @@ import com.example.tinge.presentation.navigation.TingeTopBar
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import com.example.tinge.presentation.viewmodel.TingeViewModelFactory
 import com.example.tinge.ui.theme.TingeTheme
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.tinge.presentation.navigation.specs.ProfileEditScreenSpec
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.gms.location.LocationSettingsStates
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.io.ByteArrayOutputStream
-import java.io.FileDescriptor
 import java.io.IOException
-import java.nio.charset.Charset
 
-// DO NOT DELETE PLEASE
-//    val db = Firebase.firestore
-//    val collectionRef = db.collection("TingePerson")
-//    val data = TingePerson(firstName = "Hunter", lastName = "Adam", imageId = 123, age = 21, height = 63, gender = "Male")
-//    val documentRef = collectionRef.document()
-//    documentRef.set(data)
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val LOG_TAG = "448.MainActivity"
@@ -62,14 +54,6 @@ class MainActivity : AppCompatActivity() {
 
     fun uriToBitmap(selectedFileUri: Uri): String {
         try {
-            // use the new bitmap instead of the decoded bitmap
-//            val inputStream = contentResolver.openInputStream(selectedFileUri)
-//            val imageBytes = inputStream?.readBytes()
-//            inputStream?.close()
-//
-//            val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
-//            Log.d("Encoded Length:", base64Image.length.toString())
-//            return base64Image
             val MAX_IMAGE_SIZE = 1200
             val inputStream = contentResolver.openInputStream(selectedFileUri)
             val options = BitmapFactory.Options()
@@ -87,7 +71,11 @@ class MainActivity : AppCompatActivity() {
             val compressedOptions = BitmapFactory.Options()
             compressedOptions.inSampleSize = ratio
             compressedOptions.inPreferredConfig = Bitmap.Config.RGB_565
-            val compressedImage = BitmapFactory.decodeStream(contentResolver.openInputStream(selectedFileUri), null, compressedOptions)
+            val compressedImage = BitmapFactory.decodeStream(
+                contentResolver.openInputStream(selectedFileUri),
+                null,
+                compressedOptions
+            )
             val byteArrayOutputStream = ByteArrayOutputStream()
             compressedImage!!.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream)
             val byteArray = byteArrayOutputStream.toByteArray()
@@ -102,17 +90,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     lateinit var storage: FirebaseStorage
 
-    var imageUri : Uri? = null
+    var imageUri: Uri? = null
     var base64: String = ""
 
     val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        //hande URI here
         imageUri = uri
         base64 = uriToBitmap(imageUri!!)
-        //uriToBitmap(uri!!)?.let { mTingeViewModel.updateImage(it) }
         mTingeViewModel.updateImage(base64)
     }
-    fun launchImagePicker(){
+
+    fun launchImagePicker() {
         Log.d(LOG_TAG, "Launch Image Picker Called")
         pickImage.launch("image/")
     }
@@ -126,8 +113,10 @@ class MainActivity : AppCompatActivity() {
 
         permissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-                // process if permissions were granted.
-                locationUtility.checkPermissionAndGetLocation(this@MainActivity, permissionLauncher = permissionLauncher)
+                locationUtility.checkPermissionAndGetLocation(
+                    this@MainActivity,
+                    permissionLauncher = permissionLauncher
+                )
             }
         locationLauncher = registerForActivityResult(
             ActivityResultContracts.StartIntentSenderForResult()
@@ -151,26 +140,31 @@ class MainActivity : AppCompatActivity() {
         storage = Firebase.storage
         createSignInIntent(signInLauncher)
         setContent {
-            val locationState = locationUtility.currentLocationStateFlow.collectAsStateWithLifecycle(lifecycle = this@MainActivity.lifecycle)
-            val addressState = locationUtility.currentAddressStateFlow.collectAsStateWithLifecycle(lifecycle = this@MainActivity.lifecycle)
-            val isLocationAvailable = locationUtility.currentIsLocationAvailableFlow.collectAsStateWithLifecycle(lifecycle = this@MainActivity.lifecycle)
+            val locationState =
+                locationUtility.currentLocationStateFlow.collectAsStateWithLifecycle(lifecycle = this@MainActivity.lifecycle)
             LaunchedEffect(locationState.value) {
                 locationUtility.getAddress(locationState.value)
             }
-            MainActivityContent(tingeViewModel = mTingeViewModel, this@MainActivity,locationUtility,permissionLauncher)
+            MainActivityContent(
+                tingeViewModel = mTingeViewModel,
+                this@MainActivity,
+                locationUtility,
+                permissionLauncher
+            )
         }
     }
 }
 
 @Composable
-private fun MainActivityContent(tingeViewModel: ITingeViewModel, mainActivity: MainActivity,locationUtility: LocationUtility,
-                                permissionLauncher: ActivityResultLauncher<Array<String>>) {
+private fun MainActivityContent(
+    tingeViewModel: ITingeViewModel, mainActivity: MainActivity, locationUtility: LocationUtility,
+    permissionLauncher: ActivityResultLauncher<Array<String>>
+) {
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    TingeTheme() {
-        // A surface container using the 'background' color from the theme
+    TingeTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
@@ -198,60 +192,24 @@ private fun MainActivityContent(tingeViewModel: ITingeViewModel, mainActivity: M
     }
 }
 
-//@Composable
-//fun Greeting(name: String) {
-//    Text(text = "Hello $name!")
-//}
-
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//    TingeTheme {
-//        Greeting("Android")
-//    }
-//}
-
-
 private fun createSignInIntent(signInLauncher: ActivityResultLauncher<Intent>) {
-
-    // [START auth_fui_create_intent]
-    // Choose authentication providers
     val providers = arrayListOf(
         AuthUI.IdpConfig.EmailBuilder().build()
     )
-    //AuthUI.IdpConfig.PhoneBuilder().build(),
-    //AuthUI.IdpConfig.GoogleBuilder().build(),
-    //AuthUI.IdpConfig.FacebookBuilder().build(),
-    //AuthUI.IdpConfig.TwitterBuilder().build())
-
-    // Create and launch sign-in intent
     Log.d("SIGNININTENT", "Before signInIntent")
     val signInIntent = AuthUI.getInstance()
         .createSignInIntentBuilder()
         .setAvailableProviders(providers)
         .build()
     Log.d("SIGNININTENT", "After signInIntent")
-    //signInIntent.addFlags(Intent.FLAG)
     signInLauncher.launch(signInIntent)
-
-    // [END auth_fui_create_intent]
 }
 
 private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult): FirebaseUser? {
-    val response = result.idpResponse
     if (result.resultCode == AppCompatActivity.RESULT_OK) {
-        // Successfully signed in
         val user = FirebaseAuth.getInstance().currentUser
-        // ...
         return user
     } else {
-        // Sign in failed. If response is null the user canceled the
-        // sign-in flow using the back button. Otherwise check
-        // response.getError().getErrorCode() and handle the error.
-        // ...
         return null
     }
 }
-// [END auth_fui_result]
-
-

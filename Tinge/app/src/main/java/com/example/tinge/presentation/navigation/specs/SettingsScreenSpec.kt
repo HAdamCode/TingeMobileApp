@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
@@ -40,9 +39,8 @@ object SettingsScreenSpec : IScreenSpec {
     ) {
         val person =
             tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
-        val locationState = locationUtility
-            .currentLocationStateFlow
-            .collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
+        val locationState =
+            locationUtility.currentLocationStateFlow.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 
         LaunchedEffect(locationState.value) {
             val location = locationState.value
@@ -64,7 +62,14 @@ object SettingsScreenSpec : IScreenSpec {
             }
         }
 
-        TingeSettingsScreen(locationUtility, mainActivity, permissionLauncher, person.value, tingeViewModel, coroutineScope, navController)
+        TingeSettingsScreen(
+            locationUtility,
+            mainActivity,
+            permissionLauncher,
+            person.value,
+            tingeViewModel,
+            coroutineScope
+        )
     }
 
     @Composable
@@ -74,10 +79,8 @@ object SettingsScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        //Should have button to navigate to settings
         IconButton(onClick = { navController.navigate(route = route) }) {
             Icon(
-                //PLACEHOLDER ICON
                 imageVector = Icons.Filled.Settings,
                 contentDescription = "Settings Desc Placeholder!"
             )
@@ -94,10 +97,7 @@ object SettingsScreenSpec : IScreenSpec {
     ) {
         TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
             {
-                Row(
-                    //verticalAlignment = Alignment.CenterVertically,
-                    //horizontalArrangement = Arrangement.Center
-                ) {
+                Row {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -108,15 +108,14 @@ object SettingsScreenSpec : IScreenSpec {
             }
         } else {
             { }
-        }, title = { Text("Settings") },
-            actions = {
-                TopAppBarActions(
-                    tingeViewModel = tingeViewModel,
-                    navController = navController,
-                    navBackStackEntry = navBackStackEntry,
-                    context = context
-                )
-            })
+        }, title = { Text("Settings") }, actions = {
+            TopAppBarActions(
+                tingeViewModel = tingeViewModel,
+                navController = navController,
+                navBackStackEntry = navBackStackEntry,
+                context = context
+            )
+        })
     }
 
     @Composable

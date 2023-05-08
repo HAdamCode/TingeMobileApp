@@ -37,7 +37,7 @@ object ProfileEditScreenSpec : IScreenSpec, Fragment() {
         locationUtility: LocationUtility,
         permissionLauncher: ActivityResultLauncher<Array<String>>
     ) {
-        fun launchImagePickerFromScreen(){
+        fun launchImagePickerFromScreen() {
             mainActivity.launchImagePicker()
         }
 
@@ -45,7 +45,10 @@ object ProfileEditScreenSpec : IScreenSpec, Fragment() {
         val person =
             tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 
-        person.value?.let { ProfileEditScreen(it, tingeViewModel, navController, context, { launchImagePickerFromScreen() })
+        person.value?.let {
+            ProfileEditScreen(
+                it, tingeViewModel, navController, context
+            ) { launchImagePickerFromScreen() }
         }
     }
 
@@ -68,10 +71,7 @@ object ProfileEditScreenSpec : IScreenSpec, Fragment() {
     ) {
         TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
             {
-                Row(
-                    //verticalAlignment = Alignment.CenterVertically,
-                    //horizontalArrangement = Arrangement.Center
-                ) {
+                Row {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -82,15 +82,14 @@ object ProfileEditScreenSpec : IScreenSpec, Fragment() {
             }
         } else {
             { }
-        }, title = { Text("Edit Your Profile") },
-            actions = {
-                ProfileEditScreenSpec.TopAppBarActions(
-                    tingeViewModel = tingeViewModel,
-                    navController = navController,
-                    navBackStackEntry = navBackStackEntry,
-                    context = context
-                )
-            })
+        }, title = { Text("Edit Your Profile") }, actions = {
+            TopAppBarActions(
+                tingeViewModel = tingeViewModel,
+                navController = navController,
+                navBackStackEntry = navBackStackEntry,
+                context = context
+            )
+        })
     }
 
     @Composable
@@ -100,27 +99,6 @@ object ProfileEditScreenSpec : IScreenSpec, Fragment() {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-//        Row(
-//            horizontalArrangement = Arrangement.Center,
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//        ) {
-//            IconButton(onClick = {
-//                if (tingeViewModel.checkIfInDB()) {
-////                    tingeViewModel.updatePerson()
-//                }
-//                navController.navigate(route = ListScreenSpec.route); SaveToast(
-//                context
-//            )
-//            }) {
-//                Icon(
-//                    //PLACEHOLDER ICON
-//                    imageVector = Icons.Filled.Check,
-//                    contentDescription = "Save update"
-//                )
-//            }
-//        }
     }
 
     fun SaveToast(context: Context) {

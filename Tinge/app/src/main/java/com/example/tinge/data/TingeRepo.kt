@@ -1,9 +1,7 @@
 package com.example.tinge.data
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
-import com.example.tinge.R
 
 class TingeRepo private constructor(
     context: Context?
@@ -38,8 +36,7 @@ class TingeRepo private constructor(
                 preference = "",
                 lat = 0.0,
                 lon = 0.0
-            ),
-            TingePerson(
+            ), TingePerson(
                 imageId = "",
                 firstName = "Randy",
                 lastName = "Johnson",

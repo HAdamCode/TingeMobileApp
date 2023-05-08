@@ -4,24 +4,25 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tinge.data.TingePerson
-import com.example.tinge.data.TingeRepo
-import kotlin.math.floor
 import java.util.Base64
+import kotlin.math.floor
 
 @Composable
 fun TingeProfileScreen(person: TingePerson) {
@@ -31,7 +32,6 @@ fun TingeProfileScreen(person: TingePerson) {
             val decodedBytes = Base64.getDecoder().decode(base64String)
             return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
         } catch (e: IllegalArgumentException) {
-            // Invalid Base64 string
             e.printStackTrace()
         }
         return null
@@ -51,7 +51,7 @@ fun TingeProfileScreen(person: TingePerson) {
                 fontSize = 34.sp,
                 color = MaterialTheme.colorScheme.primary
             )
-            Row() {
+            Row {
                 Text(
                     text = " Age: ${person.age}  | ",
                     fontSize = 18.sp,
@@ -71,33 +71,14 @@ fun TingeProfileScreen(person: TingePerson) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
-            ){
-                if(person.imageId != ""){
+            ) {
+                if (person.imageId != "") {
                     val image = loadImageFromBase64(person.imageId)
-                    if(image != null){
+                    if (image != null) {
                         Image(image.asImageBitmap(), "image")
                     }
-
                 }
             }
-
-//            Image(
-//                painter = painterResource(
-//                    id =
-//                    person.imageId
-//                ),
-//                contentDescription = "",
-//                Modifier
-//                    .fillMaxWidth()
-//                    .size(350.dp)
-//                    .fillMaxHeight()
-//            )
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun PreviewTingeProfileScreen() {
-//    TingeProfileScreen(person = TingeRepo.getInstance(LocalContext.current).persons.last())
-//}

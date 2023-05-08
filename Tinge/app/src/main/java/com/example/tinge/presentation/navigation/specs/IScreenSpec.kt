@@ -39,10 +39,7 @@ sealed interface IScreenSpec {
         ) {
             val route = navBackStackEntry?.destination?.route ?: ""
             allScreens[route]?.TopAppBarContent(
-                tingeViewModel,
-                navController,
-                navBackStackEntry,
-                context
+                tingeViewModel, navController, navBackStackEntry, context
             )
         }
 
@@ -55,10 +52,7 @@ sealed interface IScreenSpec {
         ) {
             val route = navBackStackEntry?.destination?.route ?: ""
             allScreens[route]?.BottomAppBarContent(
-                tingeViewModel,
-                navController,
-                navBackStackEntry,
-                context
+                tingeViewModel, navController, navBackStackEntry, context
             )
         }
     }
@@ -77,10 +71,7 @@ sealed interface IScreenSpec {
     ) {
         TopAppBar(navigationIcon = if (navController.previousBackStackEntry != null) {
             {
-                Row(
-                    //verticalAlignment = Alignment.CenterVertically,
-                    //horizontalArrangement = Arrangement.Center
-                ) {
+                Row {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -91,15 +82,14 @@ sealed interface IScreenSpec {
             }
         } else {
             { }
-        }, title = { Text("Top Bar") },
-            actions = {
-                TopAppBarActions(
-                    tingeViewModel = tingeViewModel,
-                    navController = navController,
-                    navBackStackEntry = navBackStackEntry,
-                    context = context
-                )
-            })
+        }, title = { Text("Top Bar") }, actions = {
+            TopAppBarActions(
+                tingeViewModel = tingeViewModel,
+                navController = navController,
+                navBackStackEntry = navBackStackEntry,
+                context = context
+            )
+        })
     }
 
     @Composable
@@ -118,15 +108,14 @@ sealed interface IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        TopAppBar(title = { },
-            actions = {
-                BottomAppBarActions(
-                    tingeViewModel = tingeViewModel,
-                    navController = navController,
-                    navBackStackEntry = navBackStackEntry,
-                    context = context
-                )
-            })
+        TopAppBar(title = { }, actions = {
+            BottomAppBarActions(
+                tingeViewModel = tingeViewModel,
+                navController = navController,
+                navBackStackEntry = navBackStackEntry,
+                context = context
+            )
+        })
     }
 
     @Composable

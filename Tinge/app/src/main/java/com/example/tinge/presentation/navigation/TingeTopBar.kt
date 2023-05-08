@@ -9,9 +9,7 @@ import com.example.tinge.presentation.viewmodel.ITingeViewModel
 
 @Composable
 fun TingeTopBar(
-    tingeViewModel: ITingeViewModel,
-    navController: NavHostController,
-    context: Context
+    tingeViewModel: ITingeViewModel, navController: NavHostController, context: Context
 ) {
     val navBackStackEntryState = navController.currentBackStackEntryAsState()
     IScreenSpec.TopBar(

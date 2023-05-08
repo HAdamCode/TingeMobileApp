@@ -1,55 +1,42 @@
 package com.example.tinge.presentation.viewmodel
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.compose.runtime.movableContentWithReceiverOf
 import androidx.lifecycle.ViewModel
-import com.example.tinge.R
 import com.example.tinge.data.TingeMatches
 import com.example.tinge.data.TingeMessages
 import com.example.tinge.data.TingePerson
 import com.example.tinge.data.TingeRepo
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.*
-import java.io.ByteArrayOutputStream
-import java.util.*
-import kotlin.math.floor
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
-class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeViewModel {
+class TingeViewModel(tingeRepo: TingeRepo) : ViewModel(), ITingeViewModel {
     companion object {
         private const val LOG_TAG = "448.TingeViewModel"
     }
 
-    private val mPersons: MutableList<TingePerson> =
-        mutableListOf()
+    private val mPersons: MutableList<TingePerson> = mutableListOf()
 
-    /**
-     * holds list of all characters stored within the view model
-     */
     private val mPersonListState = MutableStateFlow(mPersons.toList())
 
     override val personListState: StateFlow<List<TingePerson>>
         get() = mPersonListState.asStateFlow()
 
-    private val mCurrentPersonState: MutableStateFlow<TingePerson?> =
-        MutableStateFlow(null)
+    private val mCurrentPersonState: MutableStateFlow<TingePerson?> = MutableStateFlow(null)
 
     override val currentPersonState: StateFlow<TingePerson?>
         get() = mCurrentPersonState
 
-    private val mCurrentUserState: MutableStateFlow<TingePerson?> =
-        MutableStateFlow(null)
+    private val mCurrentUserState: MutableStateFlow<TingePerson?> = MutableStateFlow(null)
 
     override val currentUserState: StateFlow<TingePerson?>
         get() = mCurrentUserState
 
-    private val mCurrentEditProfileState: MutableStateFlow<TingePerson?> =
-        MutableStateFlow(null)
+    private val mCurrentEditProfileState: MutableStateFlow<TingePerson?> = MutableStateFlow(null)
 
     override val currentEditProfileState: StateFlow<TingePerson?>
         get() = mCurrentEditProfileState
@@ -60,126 +47,91 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
     override val currentMessagesListState: StateFlow<List<TingeMessages>>
         get() = mCurrentMessagesListState
 
-    private val mChatListState: MutableStateFlow<List<TingePerson>> =
-        MutableStateFlow(emptyList())
+    private val mChatListState: MutableStateFlow<List<TingePerson>> = MutableStateFlow(emptyList())
 
     override val chatListState: StateFlow<List<TingePerson>>
         get() = mChatListState
 
-    private val mCurrentPersonChatState: MutableStateFlow<TingePerson?> =
-        MutableStateFlow(null)
+    private val mCurrentPersonChatState: MutableStateFlow<TingePerson?> = MutableStateFlow(null)
 
     override val currentPersonChatState: StateFlow<TingePerson?>
         get() = mCurrentPersonChatState
 
 
-
-    private val mCurrentImageState: MutableStateFlow<String> =
-        MutableStateFlow("")
+    private val mCurrentImageState: MutableStateFlow<String> = MutableStateFlow("")
     override val currentImageState: StateFlow<String>
         get() = mCurrentImageState.asStateFlow()
 
     init {
         Log.d(LOG_TAG, "Characters do be adding")
-//        addPerson(tingeRepo.persons.first())
-//        addPerson(tingeRepo.persons.last())
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
         val db = Firebase.firestore
         val collectionRef = db.collection("TingePerson")
         getRandomProfile()
-//        if (userEmail != null) {
-//            Log.d("TingeViewModel", userEmail)
-//        }
-//        else {
-//            Log.d("TingeViewModel", "No email")
-//        }
-        collectionRef.whereEqualTo("email", userEmail)
-            .get()
-            .addOnSuccessListener { documents ->
-//                if (documents.size() == 0) {
-//                    mCurrentUserState.update { null }
-//                }
-                Log.d("TingeViewModel", "Inside viewmodel for loop")
-                if (documents.documents.isEmpty()) {
-                    Log.d("TingeViewModel", "This happened 1")
-                    val data = TingePerson(
-                        firstName = "",
-                        lastName = "",
-                        imageId = "",
-                        age = 0,
-                        height = 0,
-                        gender = "",
-                        email = userEmail,
-                        preference = "",
-                        lat = 0.0,
-                        lon = 0.0
+        Log.d("TTTTTTTTTT", userEmail.toString())
+        collectionRef.whereEqualTo("email", userEmail).get().addOnSuccessListener { documents ->
+            if (documents.documents.isEmpty()) {
+                Log.d("TingeViewModel", "This happened 1")
+                val data = TingePerson(
+                    firstName = "",
+                    lastName = "",
+                    imageId = "",
+                    age = 0,
+                    height = 0,
+                    gender = "",
+                    email = userEmail,
+                    preference = "",
+                    lat = 0.0,
+                    lon = 0.0
+                )
+                val documentRef = collectionRef.document()
+                documentRef.set(data)
+            }
+            for (document in documents) {
+                if (document.get("imageId") is String) {
+                    Log.d(LOG_TAG, "This one happens")
+                    mCurrentUserState.update { document.toObject(TingePerson::class.java) }
+                } else {
+                    val firstName = document.get("firstName").toString()
+                    val lastName = document.get("lastName").toString()
+                    val imageId = ""
+                    val age = Integer.parseInt(document.get("age").toString())
+                    val height = Integer.parseInt(document.get("height").toString())
+                    val gender = document.get("gender").toString()
+                    val email = document.get("email").toString()
+                    val preference = document.get("preference").toString()
+                    var lat = document.getDouble("lat")
+                    var lon = document.getDouble("lon")
+                    if (lat == null) lat = 0.0
+                    if (lon == null) lon = 0.0
+                    val tempTingePerson: TingePerson = TingePerson(
+                        firstName,
+                        lastName,
+                        imageId,
+                        age,
+                        height,
+                        gender,
+                        email,
+                        preference,
+                        lat,
+                        lon
                     )
-                    val documentRef = collectionRef.document()
-                    documentRef.set(data)
-                }
-                for (document in documents) {
-                    if(document.get("imageId") is String){
-                        Log.d(LOG_TAG, "This one happens")
-                        mCurrentUserState.update { document.toObject(TingePerson::class.java) }
-                    }else{
-                        val firstName = document.get("firstName").toString()
-                        val lastName = document.get("lastName").toString()
-                        val imageId = ""
-                        val age = Integer.parseInt(document.get("age").toString())
-                        val height = Integer.parseInt(document.get("height").toString())
-                        val gender = document.get("gender").toString()
-                        val email = document.get("email").toString()
-                        val preference = document.get("preference").toString()
-                        var lat = document.getDouble("lat")
-                        var lon = document.getDouble("lon")
-                        if (lat == null)
-                            lat = 0.0
-                        if (lon == null)
-                            lon = 0.0
-                        val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference,lat,lon)
-                        mCurrentUserState.update { tempTingePerson }
-                    }
+                    mCurrentUserState.update { tempTingePerson }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.w("TAG", "Error getting documents: ", exception)
-            }
+        }.addOnFailureListener { exception ->
+            Log.w("TAG", "Error getting documents: ", exception)
+        }
 
     }
-
-    /**
-     * Loads a character by id into currentCharacterState, if it exists.  If id is not found
-     * in list of characters, then sets currentCharacterState to null.
-     * @param uuid id to use for character lookup
-     */
-//    override fun loadPersonByUUID(uuid: UUID) {
-//        Log.d(LOG_TAG, "loadCharacterByUUID($uuid)")
-//        mCurrentCharacterState.value = null
-//        mCharacters.forEach { character ->
-//            if (character.id == uuid) {
-//                Log.d(LOG_TAG, "Character found! $character")
-//                mCurrentCharacterState.value = character
-//                return
-//            }
-//        }
-//        Log.d(LOG_TAG, "Character not found")
-//        return
-//    }
 
     override fun updateImage(imageToUpdate: String) {
         Log.d(LOG_TAG, "Image Updated!")
-        Log.d(LOG_TAG, imageToUpdate.length.toString())
         mCurrentImageState.update { imageToUpdate }
     }
 
-    /**
-     * Adds the given character to the list of characters.
-     * @param characterToAdd character to add to the list
-     */
     override fun addPerson(personToAdd: TingePerson) {
         Log.d(LOG_TAG, "adding character $personToAdd")
-//        mPersonListState.value += personToAdd
-//        mCurrentPersonState.value = personToAdd
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
         val db = Firebase.firestore
         val collectionRef = db.collection("TingePerson")
@@ -199,26 +151,6 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         documentRef.set(data)
     }
 
-    /**
-     * Deletes corresponding character from the list of characters, if it exists in the list.
-     * Matches characters by id.  If character is not found in the list, does nothing.
-     * @param characterToDelete character to delete from list
-     */
-//    override fun deleteCharacter(characterToDelete: SamodelkinCharacter) {
-//        Log.d(LOG_TAG, "deleting character $characterToDelete")
-//        mCharacters.forEach { character ->
-//            if (character.id == characterToDelete.id) {
-//                mCharacters.remove(character)
-//                if (mCurrentCharacterState.value == character) {
-//                    mCurrentCharacterState.value = null
-//                }
-//                Log.d(LOG_TAG, "character deleted")
-//                return
-//            }
-//        }
-//        Log.d(LOG_TAG, "Character not found")
-//    }
-
     override fun updatePerson(tingePerson: TingePerson, image: String) {
         val db = Firebase.firestore
         val collectionRef = db.collection("TingePerson")
@@ -237,7 +169,6 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 
         query.get().addOnSuccessListener { querySnapshot ->
             for (document in querySnapshot.documents) {
-                Log.d("TingeViewsssssModel", document.get("firstName").toString())
                 collectionRef.document(document.id).update(updates)
             }
         }.addOnFailureListener { exception ->
@@ -249,54 +180,50 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
         val db = Firebase.firestore
         val collectionRef = db.collection("TingePerson")
-        var numberOfDocs = true
-//        userEmail?.let { Log.d("TingeViewModel", it) }
-        collectionRef.whereEqualTo("email", userEmail)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                if (querySnapshot.documents.size != 0) {
-                    val document = querySnapshot.documents.first()
-                    if (document.get("imageId") is String) {
-                        mCurrentUserState.value =
-                            querySnapshot.documents.first().toObject(TingePerson::class.java)
-                    } else {
-                        val firstName = document.get("firstName").toString()
-                        val lastName = document.get("lastName").toString()
-                        val imageId = ""
-                        val age = Integer.parseInt(document.get("age").toString())
-                        val height = Integer.parseInt(document.get("height").toString())
-                        val gender = document.get("gender").toString()
-                        val email = document.get("email").toString()
-                        val preference = document.get("preference").toString()
-                        var lat = document.getDouble("lat")
-                        var lon = document.getDouble("lon")
-                        if (lat == null)
-                            lat = 0.0
-                        if (lon == null)
-                            lon = 0.0
-                        val tempTingePerson: TingePerson = TingePerson(
-                            firstName,
-                            lastName,
-                            imageId,
-                            age,
-                            height,
-                            gender,
-                            email,
-                            preference,
-                            lat,
-                            lon
-                        )
-                        mCurrentUserState.value = tempTingePerson
-                    }
+        val numberOfDocs = true
+        collectionRef.whereEqualTo("email", userEmail).get().addOnSuccessListener { querySnapshot ->
+            if (querySnapshot.documents.size != 0) {
+                val document = querySnapshot.documents.first()
+                if (document.get("imageId") is String) {
+                    mCurrentUserState.value =
+                        querySnapshot.documents.first().toObject(TingePerson::class.java)
+                } else {
+                    val firstName = document.get("firstName").toString()
+                    val lastName = document.get("lastName").toString()
+                    val imageId = ""
+                    val age = Integer.parseInt(document.get("age").toString())
+                    val height = Integer.parseInt(document.get("height").toString())
+                    val gender = document.get("gender").toString()
+                    val email = document.get("email").toString()
+                    val preference = document.get("preference").toString()
+                    var lat = document.getDouble("lat")
+                    var lon = document.getDouble("lon")
+                    if (lat == null) lat = 0.0
+                    if (lon == null) lon = 0.0
+                    val tempTingePerson: TingePerson = TingePerson(
+                        firstName,
+                        lastName,
+                        imageId,
+                        age,
+                        height,
+                        gender,
+                        email,
+                        preference,
+                        lat,
+                        lon
+                    )
+                    mCurrentUserState.value = tempTingePerson
                 }
-                else {
-                    mCurrentUserState.value = TingePerson(email = userEmail)
-                }
+            } else {
+                mCurrentUserState.value = TingePerson(email = userEmail)
+                Log.d("TingeViewModel", "This happened 1")
+                val documentRef = collectionRef.document()
+                documentRef.set(TingePerson(email = userEmail))
+
             }
-            .addOnFailureListener { exception ->
-                Log.w("TAG", "Error getting documents: ", exception)
-            }
-//        Log.d("TingeViewsssssModel", numberOfDocs.toString())
+        }.addOnFailureListener { exception ->
+            Log.w("TAG", "Error getting documents: ", exception)
+        }
         return numberOfDocs
     }
 
@@ -304,23 +231,20 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
         val db = Firebase.firestore
         var collectionRef = db.collection("Matches")
-        val listOfMatches: MutableStateFlow<List<String>> =
-            MutableStateFlow(emptyList())
+        val listOfMatches: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
         var preference = "Male"
         val currentUser = mCurrentUserState.value
         if (currentUser != null) {
             preference = currentUser.preference
         }
-        collectionRef.whereEqualTo("currentuser", userEmail.toString())
-            .get()
+        collectionRef.whereEqualTo("currentuser", userEmail.toString()).get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     listOfMatches.value += document.toObject(TingeMatches::class.java).otheruser
                 }
                 Log.d("preference", preference)
                 collectionRef = db.collection("TingePerson")
-                collectionRef.whereEqualTo("gender", preference)
-                    .get()
+                collectionRef.whereEqualTo("gender", preference).get()
                     .addOnSuccessListener { documents ->
                         for (document in documents) {
                             val tingePerson: TingePerson
@@ -337,10 +261,8 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                                 val preference = document.get("preference").toString()
                                 var lat = document.getDouble("lat")
                                 var lon = document.getDouble("lon")
-                                if (lat == null)
-                                    lat = 0.0
-                                if (lon == null)
-                                    lon = 0.0
+                                if (lat == null) lat = 0.0
+                                if (lon == null) lon = 0.0
                                 val tempTingePerson: TingePerson = TingePerson(
                                     firstName,
                                     lastName,
@@ -372,14 +294,12 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         val db = Firebase.firestore
         var collectionRef = db.collection("Matches")
         mChatListState.value = emptyList()
-        collectionRef.whereEqualTo("currentuser", userEmail.toString())
-            .get()
+        collectionRef.whereEqualTo("currentuser", userEmail.toString()).get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     val chat = document.toObject(TingeMatches::class.java)
                     if (chat.liked) {
-                        collectionRef.whereEqualTo("currentuser", chat.otheruser)
-                            .get()
+                        collectionRef.whereEqualTo("currentuser", chat.otheruser).get()
                             .addOnSuccessListener { documents ->
                                 for (document in documents) {
                                     val newChat = document.toObject(TingeMatches::class.java)
@@ -391,23 +311,30 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                                                 for (document in documents) {
                                                     val tingePerson: TingePerson
                                                     if (document.get("imageId") is String) {
-                                                        tingePerson = document.toObject(TingePerson::class.java)
+                                                        tingePerson =
+                                                            document.toObject(TingePerson::class.java)
                                                     } else {
-                                                        val firstName = document.get("firstName").toString()
-                                                        val lastName = document.get("lastName").toString()
+                                                        val firstName =
+                                                            document.get("firstName").toString()
+                                                        val lastName =
+                                                            document.get("lastName").toString()
                                                         val imageId = ""
-                                                        val age = Integer.parseInt(document.get("age").toString())
-                                                        val height = Integer.parseInt(document.get("height").toString())
-                                                        val gender = document.get("gender").toString()
+                                                        val age = Integer.parseInt(
+                                                            document.get("age").toString()
+                                                        )
+                                                        val height = Integer.parseInt(
+                                                            document.get("height").toString()
+                                                        )
+                                                        val gender =
+                                                            document.get("gender").toString()
                                                         val email = document.get("email").toString()
-                                                        val preference = document.get("preference").toString()
+                                                        val preference =
+                                                            document.get("preference").toString()
                                                         var lat = document.getDouble("lat")
                                                         var lon = document.getDouble("lon")
-                                                        if (lat == null)
-                                                            lat = 0.0
-                                                        if (lon == null)
-                                                            lon = 0.0
-                                                        val tempTingePerson: TingePerson = TingePerson(
+                                                        if (lat == null) lat = 0.0
+                                                        if (lon == null) lon = 0.0
+                                                        val tempTingePerson = TingePerson(
                                                             firstName,
                                                             lastName,
                                                             imageId,
@@ -421,8 +348,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                                                         )
                                                         tingePerson = tempTingePerson
                                                     }
-                                                    if (tingePerson in mChatListState.value)
-                                                        continue
+                                                    if (tingePerson in mChatListState.value) continue
                                                     mChatListState.value += tingePerson
                                                     break
                                                 }
@@ -433,8 +359,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                             }
                     }
                 }
-            }
-            .addOnFailureListener { exception ->
+            }.addOnFailureListener { exception ->
                 Log.w("TAG", "Error getting documents: ", exception)
             }
     }
@@ -448,20 +373,16 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         Log.d("Tinge View Model", person.email.toString())
         mCurrentMessagesListState.value = emptyList()
         collectionRef.whereEqualTo("sender", userEmail.toString())
-            .whereEqualTo("receiver", person.email)
-            .get()
-            .addOnSuccessListener { documents ->
+            .whereEqualTo("receiver", person.email).get().addOnSuccessListener { documents ->
                 Log.d("Tinge View Model", "Sucessssssss")
                 for (document in documents) {
                     mCurrentMessagesListState.value += document.toObject(TingeMessages::class.java)
                 }
-            }
-            .addOnFailureListener { exception ->
+            }.addOnFailureListener { exception ->
                 Log.w("TAG", "Error getting documents: ", exception)
             }
         collectionRef.whereEqualTo("sender", person.email)
-            .whereEqualTo("receiver", userEmail.toString())
-            .get()
+            .whereEqualTo("receiver", userEmail.toString()).get()
             .addOnSuccessListener { documents ->
                 Log.d("Tinge View Model", "Sucessssssss")
                 for (document in documents) {
@@ -469,8 +390,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                 }
                 mCurrentMessagesListState.value =
                     mCurrentMessagesListState.value.sortedBy { it.timestamp }
-            }
-            .addOnFailureListener { exception ->
+            }.addOnFailureListener { exception ->
                 Log.w("TAG", "Error getting documents: ", exception)
             }
     }
@@ -487,10 +407,8 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         val db = Firebase.firestore
         val collectionRef = db.collection("Matches")
 
-        collectionRef.whereEqualTo("currentuser", userEmail)
-            .whereEqualTo("otheruser", person.email)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
+        collectionRef.whereEqualTo("currentuser", userEmail).whereEqualTo("otheruser", person.email)
+            .get().addOnSuccessListener { querySnapshot ->
                 if (querySnapshot.documents.size == 0) {
                     val documentRef = collectionRef.document()
                     if (userEmail != null && person.email != null) {
@@ -498,17 +416,8 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                         documentRef.set(match)
                     }
                 }
-            }
-            .addOnFailureListener { exception ->
+            }.addOnFailureListener { exception ->
                 Log.w("TAG", "Error getting documents: ", exception)
             }
-    }
-
-    override fun likePerson(characterToLike: TingePerson) {
-        TODO("Not yet implemented")
-    }
-
-    override fun dislikePerson(characterToDislike: TingePerson) {
-        TODO("Not yet implemented")
     }
 }

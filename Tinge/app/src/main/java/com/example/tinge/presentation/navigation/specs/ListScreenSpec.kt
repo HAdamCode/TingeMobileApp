@@ -1,18 +1,14 @@
 package com.example.tinge.presentation.navigation.specs
 
 import android.content.Context
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,9 +19,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.example.tinge.LocationUtility
 import com.example.tinge.MainActivity
+import com.example.tinge.R
 import com.example.tinge.presentation.list.TingeListScreen
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
-import com.example.tinge.R
 import kotlinx.coroutines.CoroutineScope
 
 object ListScreenSpec : IScreenSpec {
@@ -45,16 +41,13 @@ object ListScreenSpec : IScreenSpec {
         locationUtility: LocationUtility,
         permissionLauncher: ActivityResultLauncher<Array<String>>
     ) {
-//        tingeViewModel.getRandomProfile()
-        val personList = tingeViewModel.currentPersonState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
-        //Log.d("CONTENTLIST",personList.value.toString())
-//        Log.d("ListScreenSpec", personList.value.toString())
+        val personList =
+            tingeViewModel.currentPersonState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 
         val person = personList.value
         if (person != null) {
             TingeListScreen(person = person, tingeViewModel)
-        }
-        else {
+        } else {
             tingeViewModel.getRandomProfile()
         }
     }
@@ -66,10 +59,8 @@ object ListScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        //Should have button to navigate to settings
         IconButton(onClick = { navController.navigate(route = SettingsScreenSpec.route) }) {
             Icon(
-                //PLACEHOLDER ICON
                 imageVector = Icons.Filled.Settings,
                 contentDescription = "Settings Desc Placeholder!"
             )
@@ -108,34 +99,25 @@ object ListScreenSpec : IScreenSpec {
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            //Should have button to navigate to settings
             IconButton(onClick = { }) {
                 Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.Call,
                     painter = painterResource(R.drawable.explore),
                     contentDescription = "List Desc Placeholder!",
                     tint = Color(255, 121, 0)
                 )
             }
-            //Should have button to navigate to settings
             IconButton(onClick = {
                 tingeViewModel.getChatPersonList()
                 navController.navigate(route = ChatListScreenSpec.route)
             }) {
                 Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.AddCircle,
                     painter = painterResource(R.drawable.chaticon),
                     contentDescription = "Chat Desc Placeholder!",
                     tint = Color(25, 121, 100)
                 )
             }
-            //Should have button to navigate to settings
             IconButton(onClick = { navController.navigate(route = ProfileScreenSpec.route) }) {
                 Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.AccountBox,
                     painter = painterResource(R.drawable.profile),
                     contentDescription = "Profile Desc Placeholder!",
                     tint = Color(55, 10, 100)

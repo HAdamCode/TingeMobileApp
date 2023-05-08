@@ -7,12 +7,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.DismissDirection
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.SwipeToDismiss
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -54,6 +52,7 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
         }
         return null
     }
+
     val context = LocalContext.current
     val feet = floor(person.height / 12.0).toInt()
     val inches = person.height % 12
@@ -71,8 +70,7 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
                     tingeViewModel.addMatch(person, true)
                     tingeViewModel.getRandomProfile()
                     likeToast(context)
-                }
-                else if (willDismissDirection == DismissDirection.StartToEnd) {
+                } else if (willDismissDirection == DismissDirection.StartToEnd) {
                     tingeViewModel.addMatch(person, false)
                     tingeViewModel.getRandomProfile()
                     dislikeToast(context)
@@ -85,15 +83,16 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
                 .collect {
                     willDismissDirection =
                         when {
-                        it > 400f -> {
-                            DismissDirection.EndToStart
-                        }
-                        it < -400f -> {
-                            DismissDirection.StartToEnd
-                        }
+                            it > 400f -> {
+                                DismissDirection.EndToStart
+                            }
 
-                        else -> null
-                    }
+                            it < -400f -> {
+                                DismissDirection.StartToEnd
+                            }
+
+                            else -> null
+                        }
                 }
         })
         SwipeToDismiss(
@@ -119,7 +118,7 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
                     fontSize = 34.sp,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Row() {
+                Row {
                     Text(
                         text = " Age: ${person.age}  | ",
                         fontSize = 18.sp,
@@ -136,24 +135,13 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
-//            Image(
-//                painter = painterResource(
-//                    id =
-//                    person.imageId
-//                ),
-//                contentDescription = "",
-//                Modifier
-//                    .fillMaxWidth()
-//                    .size(350.dp)
-//                    .fillMaxHeight()
-//            )
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
-                ){
-                    if(person.imageId != ""){
+                ) {
+                    if (person.imageId != "") {
                         val image = loadImageFromBase64(person.imageId)
-                        if(image != null){
+                        if (image != null) {
                             Image(image.asImageBitmap(), "image")
                         }
 
@@ -179,8 +167,6 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
                                 dislikeToast(context)
                             }) {
                                 Icon(
-                                    //PLACEHOLDER ICON
-                                    //imageVector = Icons.Filled.Delete,
                                     painter = painterResource(com.example.tinge.R.drawable.dislikebutton),
                                     contentDescription = "List Desc Placeholder!",
                                     tint = Color.Black
@@ -199,8 +185,6 @@ fun TingeListScreen(person: TingePerson, tingeViewModel: ITingeViewModel) {
                                 likeToast(context)
                             }) {
                                 Icon(
-                                    //PLACEHOLDER ICON
-                                    //imageVector = Icons.Filled.CheckCircle,
                                     painter = painterResource(com.example.tinge.R.drawable.likebutton),
                                     contentDescription = "List Desc Placeholder!",
                                     tint = Color.Red

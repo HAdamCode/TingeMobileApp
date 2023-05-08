@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +27,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -36,7 +39,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavHostController
@@ -45,13 +47,17 @@ import com.example.tinge.presentation.navigation.specs.ListScreenSpec
 import com.example.tinge.presentation.navigation.specs.ProfileEditScreenSpec
 import com.example.tinge.presentation.viewmodel.ITingeViewModel
 import com.google.firebase.auth.FirebaseAuth
-//import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import java.util.Base64
 import kotlin.math.floor
 
 @Composable
-fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navController: NavHostController, context: Context, onButton: () -> Unit) {
+fun ProfileEditScreen(
+    person: TingePerson,
+    tingeViewModel: ITingeViewModel,
+    navController: NavHostController,
+    context: Context,
+    onButton: () -> Unit
+) {
     var firstName by remember { mutableStateOf(person.firstName) }
     var lastName by remember { mutableStateOf(person.lastName) }
     var feet by remember { mutableStateOf(floor((person.height / 12.0)).toInt().toString()) }
@@ -59,7 +65,6 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
     var age by remember { mutableStateOf(person.age.toString()) }
     var gender by remember { mutableStateOf(person.gender) }
     var preference by remember { mutableStateOf(person.preference) }
-    var userImage by remember { mutableStateOf(person.imageId) }
 
     fun loadImageFromBase64(base64String: String): Bitmap? {
         try {
@@ -67,51 +72,26 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
             val decodedBytes = Base64.getDecoder().decode(base64String)
             return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
         } catch (e: IllegalArgumentException) {
-            // Invalid Base64 string
             e.printStackTrace()
         }
         return null
     }
 
-//    val userEmail = FirebaseAuth.getInstance().currentUser?.email
-//    val db = Firebase.firestore
-//    val collectionRef = db.collection("TingePerson")
-////    val data = TingePerson(firstName = "Hunter", lastName = "Adam", imageId = 123, age = 21, height = 63, gender = "Male")
-////    val documentRef = collectionRef.document()
-////    documentRef.set(data)
-//    collectionRef.whereEqualTo("email", userEmail)
-//        .get()
-//        .addOnSuccessListener { documents ->
-//            for (document in documents) {
-//                Log.d("TAG", "${document.id} => ${document.data}")
-//                val tingePerson = document.toObject(TingePerson::class.java)
-//                firstName = tingePerson.firstName
-//                lastName = tingePerson.lastName
-//                feet = floor((tingePerson.height / 12.0)).toString()
-//                inches = (tingePerson.height % 12).toString()
-//                age = tingePerson.age.toString()
-//            }
-//        }
-//        .addOnFailureListener { exception ->
-//            Log.w("TAG", "Error getting documents: ", exception)
-//        }
-    Log.d("Profile Edit", "Here")
     Column(modifier = Modifier.fillMaxSize()) {
         Text("Current Profile Image: ")
-        if(person.imageId != ""){
+        if (person.imageId != "") {
             val image = loadImageFromBase64(person.imageId)
-            if(image != null){
+            if (image != null) {
                 Image(
                     image.asImageBitmap(),
                     "image",
                     modifier = Modifier.size(100.dp)
                 )
             }
-
         }
         Button(
             onClick = onButton
-        ){
+        ) {
             Text("Get Image")
         }
         TextField(
@@ -132,7 +112,7 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                 .fillMaxWidth()
                 .padding(4.dp, 4.dp, 4.dp, 4.dp)
         )
-        Row() {
+        Row {
             TextField(
                 placeholder = { Text(text = feet.toString()) },
                 value = feet,
@@ -155,7 +135,6 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
             )
         }
         TextField(
-            // TODO: Fix the values not changing. Maybe use a remember from MosterLab
             placeholder = { Text(text = person.age.toString()) },
             value = age,
             onValueChange = { age = it },
@@ -167,7 +146,7 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
             maxLines = 1,
             singleLine = true,
         )
-        var genderItems = listOf("Male", "Female", "Non-Binary")
+        val genderItems = listOf("Male", "Female", "Non-Binary")
         var expandedGender by remember { mutableStateOf(false) }
         var expandedPreference by remember { mutableStateOf(false) }
         var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
@@ -218,7 +197,8 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                 readOnly = true
             )
             DropdownMenu(
-                expanded = expandedPreference, onDismissRequest = { expandedPreference = !expandedPreference },
+                expanded = expandedPreference,
+                onDismissRequest = { expandedPreference = !expandedPreference },
                 modifier = Modifier.width(with(LocalDensity.current) { mTextFieldSize.width.toDp() })
             ) {
                 genderItems.forEach { genderItem ->
@@ -254,9 +234,8 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                 )
                 if (tingeViewModel.checkIfInDB()) {
                     Log.d("ProfileEditScreen", "Inside good one")
-                    //Log.d("Calling Update Person", tingeViewModel.currentImageState.value)
                     tingeViewModel.updatePerson(tingePerson, tingeViewModel.currentImageState.value)
-                    navController.navigate(route = ListScreenSpec.route);
+                    navController.navigate(route = ListScreenSpec.route)
                     ProfileEditScreenSpec.SaveToast(
                         context
                     )
@@ -266,61 +245,10 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                 }
             }) {
                 Icon(
-                    //PLACEHOLDER ICON
                     imageVector = Icons.Filled.Check,
                     contentDescription = "Save update"
                 )
             }
         }
     }
-
-
-
-//        TextField(
-//            // TODO: Fix the values not changing. Maybe use a remember from MosterLab
-//            placeholder = { Text(text = person.gender) },
-//            value = gender,
-//            onValueChange = { gender = it },
-//            label = { Text(text = "Gender") },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(4.dp, 4.dp, 4.dp, 4.dp),
-//            maxLines = 1,
-//            singleLine = true,
-//        )
-
-//        Button(onClick = {
-//            // TODO fix gender and picture
-//            Log.d("test", feet.toInt().toString())
-//            Log.d("test", inches)
-//            val tingePerson = TingePerson(
-//                firstName,
-//                lastName,
-//                123,
-//                age.toInt(),
-//                (feet.toInt() * 12) + inches.toInt(),
-//                gender,
-//                FirebaseAuth.getInstance().currentUser?.email
-//            )
-//            if (tingeViewModel.checkIfInDB()) {
-//                Log.d("ProfileEditScreen", "Inside good one")
-//                tingeViewModel.updatePerson(tingePerson)
-//                navController.navigate(route = ListScreenSpec.route);
-//                ProfileEditScreenSpec.SaveToast(
-//                    context
-//                )
-//            }
-//            else {
-//                Log.d("ProfileEditScreen", "Inside bad one")
-//                tingeViewModel.addPerson(tingePerson)
-//            }
-//        }) {
-//            Text(text = "Save")
-//        }
-}
-
-@Preview
-@Composable
-fun PreviewProfileEditScreen() {
-//    ProfileEditScreen(person = TingeRepo.getInstance(LocalContext.current).persons.last())
 }

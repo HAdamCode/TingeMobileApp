@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,7 +45,8 @@ object ChatListScreenSpec : IScreenSpec {
     ) {
         Log.d("Tinge View Model", "Tinge BADADADADAD")
         val canSend = NetworkConnectionUtil.isNetworkAvailableAndConnected(context)
-        val people = tingeViewModel.chatListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext).value
+        val people =
+            tingeViewModel.chatListState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext).value
         TingeChatListScreen(tingeViewModel, navController, people, canSend)
     }
 
@@ -58,10 +57,8 @@ object ChatListScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        //Should have button to navigate to settings
         IconButton(onClick = { navController.navigate(route = SettingsScreenSpec.route) }) {
             Icon(
-                //PLACEHOLDER ICON
                 imageVector = Icons.Filled.Settings,
                 contentDescription = "Settings Desc Placeholder!"
             )
@@ -76,15 +73,14 @@ object ChatListScreenSpec : IScreenSpec {
         navBackStackEntry: NavBackStackEntry?,
         context: Context
     ) {
-        TopAppBar(title = { Text("Chats") },
-            actions = {
-                TopAppBarActions(
-                    tingeViewModel = tingeViewModel,
-                    navController = navController,
-                    navBackStackEntry = navBackStackEntry,
-                    context = context
-                )
-            })
+        TopAppBar(title = { Text("Chats") }, actions = {
+            TopAppBarActions(
+                tingeViewModel = tingeViewModel,
+                navController = navController,
+                navBackStackEntry = navBackStackEntry,
+                context = context
+            )
+        })
     }
 
     @Composable
@@ -97,34 +93,24 @@ object ChatListScreenSpec : IScreenSpec {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
-            //Should have button to navigate to settings
             IconButton(onClick = { navController.navigate(route = ListScreenSpec.route) }) {
                 Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.Call,
                     painter = painterResource(R.drawable.explore),
                     contentDescription = "List Desc Placeholder!",
                     tint = Color(255, 121, 0)
                 )
             }
-            //Should have button to navigate to settings
             IconButton(onClick = { tingeViewModel.getChatPersonList() }) {
                 Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.AddCircle,
                     painter = painterResource(R.drawable.chaticon),
                     contentDescription = "Chat Desc Placeholder!",
                     tint = Color(25, 121, 100)
                 )
             }
-            //Should have button to navigate to settings
             IconButton(onClick = { navController.navigate(route = ProfileScreenSpec.route) }) {
                 Icon(
-                    //PLACEHOLDER ICON
-                    //imageVector = Icons.Filled.AccountBox,
                     painter = painterResource(R.drawable.profile),
                     contentDescription = "Profile Desc Placeholder!",
                     tint = Color(55, 10, 100)
