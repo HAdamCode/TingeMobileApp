@@ -28,7 +28,7 @@ class TingeRepo private constructor(
         Log.d(LOG_TAG, "Initializing Repo List")
         val personsList = listOf(
             TingePerson(
-                imageId = null,
+                imageId = "",
                 firstName = "Adam",
                 lastName = "Sandler",
                 age = 20,
@@ -38,7 +38,7 @@ class TingeRepo private constructor(
                 preference = ""
             ),
             TingePerson(
-                imageId = null,
+                imageId = "",
                 firstName = "Randy",
                 lastName = "Johnson",
                 age = 23,

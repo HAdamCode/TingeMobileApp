@@ -15,11 +15,11 @@ interface ITingeViewModel {
     val currentMessagesListState: StateFlow<List<TingeMessages>>
     val chatListState: StateFlow<List<TingePerson>>
     val currentPersonChatState: StateFlow<TingePerson?>
-    val currentImageState : StateFlow<Bitmap?>
+    val currentImageState : StateFlow<String>
 
     fun addPerson(personToAdd: TingePerson)
 
-    fun updatePerson(personToUpdate: TingePerson)
+    fun updatePerson(personToUpdate: TingePerson, image: String)
 
     fun checkIfInDB(): Boolean
 
@@ -36,5 +36,5 @@ interface ITingeViewModel {
 
     fun dislikePerson(personToDislike: TingePerson)
 
-    fun updateImage(imageToUpdate: Bitmap)
+    fun updateImage(imageToUpdate: String)
 }

@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -41,6 +42,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import java.io.FileDescriptor
 import java.io.IOException
+import java.nio.charset.Charset
 
 // DO NOT DELETE PLEASE
 //    val db = Firebase.firestore
@@ -57,32 +59,35 @@ class MainActivity : AppCompatActivity() {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var locationLauncher: ActivityResultLauncher<IntentSenderRequest>
 
-    fun uriToBitmap(selectedFileUri: Uri): Bitmap? {
+    fun uriToBitmap(selectedFileUri: Uri): String {
         try {
-            val parcelFileDescriptor = contentResolver.openFileDescriptor(selectedFileUri, "r")
-            val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
-            val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-            parcelFileDescriptor.close()
-            return image
+            // use the new bitmap instead of the decoded bitmap
+            val inputStream = contentResolver.openInputStream(selectedFileUri)
+            val imageBytes = inputStream?.readBytes()
+            inputStream?.close()
+
+            val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
+            Log.d("Encoded Length:", base64Image.length.toString())
+            return base64Image
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        return null
+        return ""
     }
 
     private lateinit var mTingeViewModel: ITingeViewModel
     private lateinit var auth: FirebaseAuth
     lateinit var storage: FirebaseStorage
 
-//    var imageUri : Uri? = null
-//    var bitmap: Bitmap? = null
+    var imageUri : Uri? = null
+    var base64: String = ""
 
     val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         //hande URI here
-        //imageUri = uri
-        //bitmap = uriToBitmap(imageUri!!)
+        imageUri = uri
+        base64 = uriToBitmap(imageUri!!)
         //uriToBitmap(uri!!)?.let { mTingeViewModel.updateImage(it) }
-        uriToBitmap(uri!!)?.let { mTingeViewModel.updateImage(it) }
+        mTingeViewModel.updateImage(base64)
     }
     fun launchImagePicker(){
         Log.d(LOG_TAG, "Launch Image Picker Called")

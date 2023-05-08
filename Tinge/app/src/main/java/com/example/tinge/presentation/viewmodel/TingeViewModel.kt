@@ -16,6 +16,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.*
+import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.math.floor
 
@@ -72,9 +73,10 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         get() = mCurrentPersonChatState
 
 
-    private val mCurrentImageState: MutableStateFlow<Bitmap?> =
-        MutableStateFlow(null)
-    override val currentImageState: StateFlow<Bitmap?>
+
+    private val mCurrentImageState: MutableStateFlow<String> =
+        MutableStateFlow("")
+    override val currentImageState: StateFlow<String>
         get() = mCurrentImageState.asStateFlow()
 
     init {
@@ -103,7 +105,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                     val data = TingePerson(
                         firstName = "",
                         lastName = "",
-                        imageId = null,
+                        imageId = "",
                         age = 0,
                         height = 0,
                         gender = "",
@@ -114,28 +116,19 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                     documentRef.set(data)
                 }
                 for (document in documents) {
-                    if (document.get("imageId") is Bitmap) {
+                    if(document.get("imageId") is String){
                         Log.d(LOG_TAG, "This one happens")
                         mCurrentUserState.update { document.toObject(TingePerson::class.java) }
-                    } else {
+                    }else{
                         val firstName = document.get("firstName").toString()
                         val lastName = document.get("lastName").toString()
-                        val imageId = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                        val imageId = ""
                         val age = Integer.parseInt(document.get("age").toString())
                         val height = Integer.parseInt(document.get("height").toString())
                         val gender = document.get("gender").toString()
                         val email = document.get("email").toString()
                         val preference = document.get("preference").toString()
-                        val tempTingePerson: TingePerson = TingePerson(
-                            firstName,
-                            lastName,
-                            imageId,
-                            age,
-                            height,
-                            gender,
-                            email,
-                            preference
-                        )
+                        val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference)
                         mCurrentUserState.update { tempTingePerson }
                     }
                 }
@@ -165,8 +158,9 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 //        return
 //    }
 
-    override fun updateImage(imageToUpdate: Bitmap) {
+    override fun updateImage(imageToUpdate: String) {
         Log.d(LOG_TAG, "Image Updated!")
+        Log.d(LOG_TAG, imageToUpdate.length.toString())
         mCurrentImageState.update { imageToUpdate }
     }
 
@@ -184,7 +178,7 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
         val data = TingePerson(
             firstName = "Hunter",
             lastName = "Adam",
-            imageId = null,
+            imageId = "",
             age = 21,
             height = 63,
             gender = "Male",
@@ -215,14 +209,14 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
 //        Log.d(LOG_TAG, "Character not found")
 //    }
 
-    override fun updatePerson(tingePerson: TingePerson) {
+    override fun updatePerson(tingePerson: TingePerson, image: String) {
         val db = Firebase.firestore
         val collectionRef = db.collection("TingePerson")
         val query = collectionRef.whereEqualTo("email", tingePerson.email)
         val updates = mapOf<String, Any>(
             "firstName" to tingePerson.firstName,
             "lastName" to tingePerson.lastName,
-            "imageId" to currentImageState,
+            "imageId" to image,
             "age" to tingePerson.age,
             "height" to tingePerson.height,
             "gender" to tingePerson.gender,
@@ -249,34 +243,25 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val document = querySnapshot.documents.first()
-                if (document.get("imageId") is Bitmap) {
-                    mCurrentUserState.value =
-                        querySnapshot.documents.first().toObject(TingePerson::class.java)
-                } else {
+                if(document.get("imageId") is String){
+                    mCurrentUserState.value = querySnapshot.documents.first().toObject(TingePerson::class.java)
+                }else{
                     val firstName = document.get("firstName").toString()
                     val lastName = document.get("lastName").toString()
-                    val imageId = null
+                    val imageId = ""
                     val age = Integer.parseInt(document.get("age").toString())
                     val height = Integer.parseInt(document.get("height").toString())
                     val gender = document.get("gender").toString()
                     val email = document.get("email").toString()
                     val preference = document.get("preference").toString()
-                    val tempTingePerson: TingePerson = TingePerson(
-                        firstName,
-                        lastName,
-                        imageId,
-                        age,
-                        height,
-                        gender,
-                        email,
-                        preference
-                    )
+                    val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference)
                     mCurrentUserState.value = tempTingePerson
                 }
             }
             .addOnFailureListener { exception ->
                 Log.w("TAG", "Error getting documents: ", exception)
             }
+//        Log.d("TingeViewsssssModel", numberOfDocs.toString())
         return numberOfDocs
     }
 
@@ -304,12 +289,12 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                     .addOnSuccessListener { documents ->
                         for (document in documents) {
                             val tingePerson: TingePerson
-                            if (document.get("imageId") is Bitmap) {
+                            if (document.get("imageId") is String) {
                                 tingePerson = document.toObject(TingePerson::class.java)
                             } else {
                                 val firstName = document.get("firstName").toString()
                                 val lastName = document.get("lastName").toString()
-                                val imageId = null
+                                val imageId = ""
                                 val age = Integer.parseInt(document.get("age").toString())
                                 val height = Integer.parseInt(document.get("height").toString())
                                 val gender = document.get("gender").toString()
@@ -362,12 +347,12 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                                             .addOnSuccessListener { documents ->
                                                 for (document in documents) {
                                                     val tingePerson: TingePerson
-                                                    if (document.get("imageId") is Bitmap) {
+                                                    if (document.get("imageId") is String) {
                                                         tingePerson = document.toObject(TingePerson::class.java)
                                                     } else {
                                                         val firstName = document.get("firstName").toString()
                                                         val lastName = document.get("lastName").toString()
-                                                        val imageId = null
+                                                        val imageId = ""
                                                         val age = Integer.parseInt(document.get("age").toString())
                                                         val height = Integer.parseInt(document.get("height").toString())
                                                         val gender = document.get("gender").toString()

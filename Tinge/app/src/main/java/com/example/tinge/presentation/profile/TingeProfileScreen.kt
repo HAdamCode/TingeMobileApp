@@ -1,6 +1,8 @@
 package com.example.tinge.presentation.profile
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Card
@@ -8,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -17,9 +20,28 @@ import androidx.compose.ui.unit.sp
 import com.example.tinge.data.TingePerson
 import com.example.tinge.data.TingeRepo
 import kotlin.math.floor
+import java.util.Base64
 
 @Composable
 fun TingeProfileScreen(person: TingePerson) {
+    fun loadImageFromBase64(base64String: String): Bitmap? {
+//        // Convert the Base64 string to a byte array
+//        val decodedString = java.util.Base64.getDecoder().decode(base64String)
+//
+//        // Decode the byte array into a Bitmap
+//        val bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+//
+//        return bitmap
+        try {
+            Log.d("Decoding: ", base64String.length.toString())
+            val decodedBytes = Base64.getDecoder().decode(base64String)
+            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        } catch (e: IllegalArgumentException) {
+            // Invalid Base64 string
+            e.printStackTrace()
+        }
+        return null
+    }
 
     val feet = floor(person.height / 12.0).toInt()
     val inches = person.height % 12
@@ -28,8 +50,13 @@ fun TingeProfileScreen(person: TingePerson) {
             .fillMaxHeight()
             .fillMaxWidth()
     ) {
-        if(person.imageId != null){
-            Image(person.imageId.asImageBitmap(), "image")
+        Log.d("ProfileScreen", person.imageId.length.toString())
+        if(person.imageId != ""){
+            val image = loadImageFromBase64(person.imageId)
+            if(image != null){
+                Image(image.asImageBitmap(), "image")
+            }
+
         }
         Column(Modifier.padding(start = 4.dp, end = 4.dp)) {
             Text(

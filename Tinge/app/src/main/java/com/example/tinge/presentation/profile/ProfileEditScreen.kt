@@ -212,7 +212,7 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                 val tingePerson = TingePerson(
                     firstName,
                     lastName,
-                    Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888),
+                    "",
                     age.toInt(),
                     (feet.toInt() * 12) + inches.toInt(),
                     gender,
@@ -221,7 +221,8 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                 )
                 if (tingeViewModel.checkIfInDB()) {
                     Log.d("ProfileEditScreen", "Inside good one")
-                    tingeViewModel.updatePerson(tingePerson)
+                    //Log.d("Calling Update Person", tingeViewModel.currentImageState.value)
+                    tingeViewModel.updatePerson(tingePerson, tingeViewModel.currentImageState.value)
                     navController.navigate(route = ListScreenSpec.route);
                     ProfileEditScreenSpec.SaveToast(
                         context

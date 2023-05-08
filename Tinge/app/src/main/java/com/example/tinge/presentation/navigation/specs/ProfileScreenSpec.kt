@@ -46,7 +46,7 @@ object ProfileScreenSpec : IScreenSpec {
         val person = tingeViewModel.currentUserState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
         val image = tingeViewModel.currentImageState.collectAsStateWithLifecycle(context = coroutineScope.coroutineContext)
 
-        person.value?.let { TingeProfileScreen(it) }
+        person.value?.let { TingeProfileScreen(it)}
 
     }
 
