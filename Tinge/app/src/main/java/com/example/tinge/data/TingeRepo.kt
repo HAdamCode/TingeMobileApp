@@ -35,7 +35,9 @@ class TingeRepo private constructor(
                 height = 72,
                 gender = "Male",
                 email = "",
-                preference = ""
+                preference = "",
+                lat = 0.0,
+                lon = 0.0
             ),
             TingePerson(
                 imageId = "",
@@ -45,7 +47,9 @@ class TingeRepo private constructor(
                 height = 63,
                 gender = "Non-binary",
                 email = "",
-                preference = ""
+                preference = "",
+                lat = 0.0,
+                lon = 0.0
             )
         )
         persons = personsList

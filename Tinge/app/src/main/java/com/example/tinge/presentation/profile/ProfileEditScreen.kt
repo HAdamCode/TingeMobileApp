@@ -206,6 +206,7 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
             modifier = Modifier
                 .fillMaxWidth()
         ) {
+
             IconButton(onClick = {
                 Log.d("test", feet.toInt().toString())
                 Log.d("test", inches)
@@ -217,7 +218,9 @@ fun ProfileEditScreen(person: TingePerson, tingeViewModel: ITingeViewModel, navC
                     (feet.toInt() * 12) + inches.toInt(),
                     gender,
                     FirebaseAuth.getInstance().currentUser?.email,
-                    preference
+                    preference,
+                    person.lat,
+                    person.lon
                 )
                 if (tingeViewModel.checkIfInDB()) {
                     Log.d("ProfileEditScreen", "Inside good one")

@@ -10,8 +10,10 @@ data class TingePerson(
     val height: Int,
     val gender: String = "Male",
     val email: String?,
-    val preference: String
+    val preference: String,
+    val lat: Double,
+    val lon: Double
 )
 {
-    constructor() : this("", "", "", 0, 0, "", "","")
+    constructor() : this("", "", "", 0, 0, "", "","",0.0,0.0)
 }

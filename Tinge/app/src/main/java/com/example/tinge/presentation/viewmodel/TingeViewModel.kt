@@ -110,7 +110,9 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                         height = 0,
                         gender = "",
                         email = userEmail,
-                        preference = ""
+                        preference = "",
+                        lat = 0.0,
+                        lon = 0.0
                     )
                     val documentRef = collectionRef.document()
                     documentRef.set(data)
@@ -128,7 +130,13 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                         val gender = document.get("gender").toString()
                         val email = document.get("email").toString()
                         val preference = document.get("preference").toString()
-                        val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference)
+                        var lat = document.getDouble("lat")
+                        var lon = document.getDouble("lon")
+                        if (lat == null)
+                            lat = 0.0
+                        if (lon == null)
+                            lon = 0.0
+                        val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference,lat,lon)
                         mCurrentUserState.update { tempTingePerson }
                     }
                 }
@@ -183,7 +191,9 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
             height = 63,
             gender = "Male",
             email = userEmail,
-            preference = "Non-Binary"
+            preference = "Non-Binary",
+            lat = 0.0,
+            lon = 0.0
         )
         val documentRef = collectionRef.document()
         documentRef.set(data)
@@ -254,7 +264,13 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                     val gender = document.get("gender").toString()
                     val email = document.get("email").toString()
                     val preference = document.get("preference").toString()
-                    val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference)
+                    var lat = document.getDouble("lat")
+                    var lon = document.getDouble("lon")
+                    if (lat == null)
+                        lat = 0.0
+                    if (lon == null)
+                        lon = 0.0
+                    val tempTingePerson : TingePerson = TingePerson(firstName, lastName, imageId, age, height, gender, email, preference,lat,lon)
                     mCurrentUserState.value = tempTingePerson
                 }
             }
@@ -300,6 +316,12 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                                 val gender = document.get("gender").toString()
                                 val email = document.get("email").toString()
                                 val preference = document.get("preference").toString()
+                                var lat = document.getDouble("lat")
+                                var lon = document.getDouble("lon")
+                                if (lat == null)
+                                    lat = 0.0
+                                if (lon == null)
+                                    lon = 0.0
                                 val tempTingePerson: TingePerson = TingePerson(
                                     firstName,
                                     lastName,
@@ -308,7 +330,9 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                                     height,
                                     gender,
                                     email,
-                                    preference
+                                    preference,
+                                    lat,
+                                    lon
                                 )
                                 tingePerson = tempTingePerson
                             }
@@ -358,6 +382,12 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                                                         val gender = document.get("gender").toString()
                                                         val email = document.get("email").toString()
                                                         val preference = document.get("preference").toString()
+                                                        var lat = document.getDouble("lat")
+                                                        var lon = document.getDouble("lon")
+                                                        if (lat == null)
+                                                            lat = 0.0
+                                                        if (lon == null)
+                                                            lon = 0.0
                                                         val tempTingePerson: TingePerson = TingePerson(
                                                             firstName,
                                                             lastName,
@@ -366,7 +396,9 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                                                             height,
                                                             gender,
                                                             email,
-                                                            preference
+                                                            preference,
+                                                            lat,
+                                                            lon
                                                         )
                                                         tingePerson = tempTingePerson
                                                     }

@@ -19,6 +19,10 @@ fun TingeSettingsScreen(locationUtility: LocationUtility,mainActivity: MainActiv
             Text(text = "Get Location")
         }
     }
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Text(text = "latitude")
+        Text(text = "")
+    }
 }
 
 
