@@ -385,6 +385,8 @@ class TingeViewModel(private val tingeRepo: TingeRepo) : ViewModel(), ITingeView
                                                         )
                                                         tingePerson = tempTingePerson
                                                     }
+                                                    if (tingePerson in mChatListState.value)
+                                                        continue
                                                     mChatListState.value += tingePerson
                                                     break
                                                 }
